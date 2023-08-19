@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Clean Blog</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="{% static 'css/clean-blog.min.css' %}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    {% include "include/header.html" %}
+
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('{% static 'img/home-bg.jpg' %}')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="site-heading">
+                        <h1>وبلاگ</h1>
+                        <hr class="small">
+                        <span class="subheading">از دنیای واقعی به دنیای وبلاگ خوش آمدید</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                {% for blog in blog %}
+                <div class="post-preview" style="direction: rtl;">
+                    <a href="{% url 'blog:detail' blog.slug%}">
+                        <h2 class="post-title">
+                            {{blog.title}}
+                        </h2>
+                        <h3 class="post-subtitle">
+                            {{blog.text | truncatewords:15}}
+                        </h3>
+                    </a>
+                    <p class="post-meta">ساخته شده توسط <a href="{% url 'blog:author' blog.author%}">{{blog.author}}</a> در {{blog.jpublish}}</p>
+                </div>
+                <hr>
+                {% endfor %}
+                <!-- Pager -->
+                <div style="display: flex; justify-content: space-between;" >
+                    {% if blog.has_previous %}
+                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="{% url 'blog:home' %}?page={{blog.previous_page_number}}">پست های جدیدتر →</a></div>
+                    {% endif %}
+                    {% if blog.has_next %}
+                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="{% url 'blog:home' %}?page={{blog.next_page_number}}">پست های قدیمی →</a></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+
+    {% include "include/footer.html" %}
+    <!-- jQuery -->
+    <script src="{% static 'endor/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="{% static 'js/jqBootstrapValidation.js' %}"></script>
+    <script src="{% static 'js/contact_me.js' %}"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="{% static 'js/clean-blog.min.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<style>
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .dropdown-content {
+      display: none;
+      position:fixed;
+      text-align: center;
+      background-color: rgb(255, 255, 255);
+      min-width: 100px;
+      box-shadow: 0px 8px 16px 0px rgb(1, 1, 1);
+      padding: 12px 16px;
+      z-index: 1;
+    }
+    
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    </style>
+   <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="dropdown">
+                        <a href="" style="font-size: large;font-size: large;">دسته بندی</a>
+                        <div class="dropdown-content" >
+                            {% for category in category%}
+                            <a href="{% url 'blog:category' category.name%}"><p style="color: rgb(0, 0, 0);font-size: large;direction: rtl;">{{category.name}}</p></a>
+                            {% endfor %}
+                        </div>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'blog:about' %}" style="font-size: large;">درباره من</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'blog:contact' %}" style="font-size: large;">ارتباط با من</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'blog:home' %}" style="font-size: large;">خانه</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->

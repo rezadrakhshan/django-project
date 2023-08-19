@@ -1,0 +1,163 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'assets/images/favicon.png' %}" rel="icon" type="image/png">
+    <title>Settings</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'assets/css/icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
+
+</head>
+
+<body>
+
+
+       
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="favicon.png" rel="icon" type="image/png">
+        <title>Home</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static 'assets/css/icons.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
+    </head>
+    
+    <body>
+    
+                <header>
+                    <div class="header_inner">
+                        <div class="left-side">
+                            <!-- Logo -->
+                            
+    
+                            <!--<div class="triger" uk-toggle="target: #wrapper ; cls: sidebar-active">
+                                <i class="uil-bars"></i>
+                            </div>-->
+    
+                            <div class="header_search">
+                                
+                                <div class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+    
+                        </div>
+                        <div class="right-side lg:pr-4">
+                             <!-- upload -->
+
+                             <!-- upload dropdown box -->
+
+                            
+                             <!-- Notification -->
+    
+
+    
+                            <!-- Messages -->
+    
+
+    
+                            <!-- profile -->
+    
+                            <a href="#">
+                                <img src="{{profile.image.url}}" class="header-avatar" alt="">
+                            </a>
+                            <div uk-drop="mode: click;offset:9" class="header_dropdown profile_dropdown border-t">
+                                <ul>
+                                    <li><a href="{% url 'socialplatform:home' %}"> home </a> </li>
+                                    <li><a href="explore.html">explore </a> </li>
+                                    <li><a href="#"> Help </a> </li>
+                                    <li><a href="{% url 'socialplatform:logout' %}"> Log Out</a></li>
+                                </ul>
+                            </div>
+    
+                        </div>
+                    </div>
+                </header>
+            <div class="container m-auto"> 
+
+                <h1 class="text-2xl leading-none text-gray-900 tracking-tight mt-3"> Account Setting/{{profile.username}} </h1>
+                <ul class="mt-5 -mr-3 flex-nowrap lg:overflow-hidden overflow-x-scroll uk-tab">
+                    <li class="uk-active"><a href="#">General</a></li>
+                    <li><a href="">Profile</a></li>
+                </ul>
+
+                <div class="grid lg:grid-cols-3 mt-12 gap-8">
+                    <div class="bg-white rounded-md lg:shadow-lg shadow col-span-2">
+
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="grid grid-cols-2 gap-3 lg:p-6 p-4">
+                                <div>
+                                    <label for=""> Profile Image</label>
+                                    <img src="{{profile.image.url}}" alt="" height="100" width="100">
+                                    <input  name="image" type="file" placeholder="" class="shadow-none bg-gray-100">
+                                </div>
+                                <div class="col-span-2">
+                                    <label for="about">Name</label>  
+                                    <input value="{{profile.name}}" name="name" type="text" placeholder="" class="shadow-none bg-gray-100">
+                                </div>
+                                <div class="col-span-2">
+                                    <label for="about">Biography</label>  
+                                    <textarea id="about" name="bio" rows="3"  class="shadow-none bg-gray-100">{{profile.bio}}</textarea>
+                                </div> 
+                                <div class="col-span-2">
+                                    <label for=""> Location</label>
+                                    <input value="{{profile.address}}" name="location" type="text" placeholder="" class="shadow-none bg-gray-100">
+                                </div>  
+                                <div class="bg-gray-10 p-6 pt-0 flex justify-end space-x-3">
+                                    <button class="p-2 px-4 rounded bg-gray-50 text-red-500"> Cancel </button>
+                                    <button type="submit" class="button bg-blue-700"> Save </button>
+                                </div>    
+                           </div> 
+                        </form>
+    
+
+    
+                       
+    
+                    </div>
+
+    
+                    </div>
+                    <br>
+
+                </div>
+
+            </div>
+            
+        </div>
+
+    </div>
+
+
+    
+
+ <!-- Scripts
+    ================================================== -->
+    <script src="{% static 'assets/js/tippy.all.min.js' %}"></script>  
+    <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/uikit.js' %}"></script>
+    <script src="{% static 'assets/js/simplebar.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
+
+
+    <script src="{% static '../../unpkg.com/ionicons%405.2.3/dist/ionicons.js' %}"></script>
+</body>
+
+</html>

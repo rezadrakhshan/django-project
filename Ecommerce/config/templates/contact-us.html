@@ -1,0 +1,94 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Material Design Bootstrap</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href={% static 'css/bootstrap.min.css' %} rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href={% static 'css/mdb.min.css' %} rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href={% static 'css/style.min.css' %} rel="stylesheet">
+  <style type="text/css">
+    html,
+    body,
+    header,
+    .carousel {
+      height: 60vh;
+    }
+
+    @media (max-width: 740px) {
+
+      html,
+      body,
+      header,
+      .carousel {
+        height: 100vh;
+      }
+    }
+
+    @media (min-width: 800px) and (max-width: 850px) {
+
+      html,
+      body,
+      header,
+      .carousel {
+        height: 100vh;
+      }
+    }
+
+  </style>
+  
+</head>
+
+<body>
+
+    {% include "header.html"%}
+    <h1 style="margin-top: 5%;margin-left:44% ;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Contact Us</h1>
+    <form style="margin-top: 5%;margin-left: 35%;" method="post">
+      {% csrf_token %}
+        <!-- Default input -->
+      <input placeholder="name" name="name" required type="text"  class="form-control" style="width: 500px">
+      <br>
+      <input placeholder="email" name="email" required type="email"  class="form-control" style="width: 500px">
+      <br>
+      <input placeholder="phone number" name="phone" required type="text"  class="form-control" style="width: 500px">
+      <br>
+      <input placeholder="subject" name="subject" required type="text"  class="form-control" style="width: 500px">
+      <br>
+      <textarea placeholder="message" name="message" required type="text"  class="form-control" style="width: 500px"></textarea>
+      <button class="btn btn-primary btn-md my-5 p" type="submit" style="margin-top: 2%;margin-left: 20%;">Send
+      </button>
+    </form>
+
+    {% include "footer.html" %}
+  </main>
+  <!--Main layout-->
+
+  
+
+  <!-- SCRIPTS -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="js/mdb.min.js"></script>
+  <!-- Initializations -->
+  <script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+
+  </script>
+</body>
+
+</html>
