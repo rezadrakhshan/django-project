@@ -63,7 +63,7 @@
                             {{author.text | truncatewords:15}}
                         </h3>
                     </a>
-                    <p class="post-meta">ساخته شده توسط <a>{{author.author}}</a> در {{author.jpublish}}</p>
+                    <p class="post-meta">ساخته شده توسط <a href="{% url 'blog:author' author.author%}" >{{author.author}}</a> در {{author.jpublish}}</p>
                 </div>
                 <hr>
                 {% endfor %}
