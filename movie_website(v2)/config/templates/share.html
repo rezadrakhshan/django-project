@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load social_share %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video streaming</title>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+</head>
+<style>
+    .box {
+        margin-top: 20%;
+    }
+
+    h2 {
+        text-align: center;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: 40px;
+    }
+
+    .button {
+        text-align: center;
+        font-size: 40px;
+    }
+</style>
+
+<body>
+   {% if request.resolver_match.url_name == 'email' %}
+    <div class="box">
+        <h2>Are you sure you want to share this movie?</h2>
+        <div class="button">
+            {% send_email 'Netflix'  '{{text}}' %}
+        </div>
+    </div>
+    {% elif request.resolver_match.url_name == 'telegram' %}
+    <div class="box">
+        <h2>Are you sure you want to share this movie?</h2>
+        <div class="button">
+            {% post_to_telegram '{{text}}' object_or_url %}
+        </div>
+    </div>
+    {% endif %}
+</body>
+
+</html>

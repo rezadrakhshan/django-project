@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Streaming</title>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <!-- i will provide this in description  -->
+  <link rel="stylesheet" href="{% static "css/slick.css" %}" />
+  <link rel="stylesheet" href="{% static "css/slick-theme.css" %}" />
+  <link rel="stylesheet" href="{% static "css/owl.carousel.min.css" %}" />
+  <link rel="stylesheet" href="{% static "css/animate.min.css" %}" />
+  <link rel="stylesheet" href="{% static "css/magnific-popup.css" %}" />
+  <link rel="stylesheet" href="{% static "css/select2.min.css" %}" />
+  <link rel="stylesheet" href="{% static "css/select2-bootstrap4.min.css" %}" />
+
+  <link rel="stylesheet" href="{% static "css/slick-animation.css" %}" />
+  <link rel="stylesheet" href="{% static "style.css" %}" />
+  
+</head>
+<style>
+    input::placeholder{
+        text-align: center;
+    }
+    button{
+        margin-left: 47%;
+        margin-top: 2%;
+    }
+</style>
+<body>
+    {% include "include/header.html" %}
+
+
+    <div>
+        <div>
+            <div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <h1 style="text-align: center;font-size: 50px;">Contact US</h1>
+                <div>
+                    <form action="" method="post">
+                        
+                        {% csrf_token %}
+                        <input class="text-center " name="subject" type="text" placeholder="subject" style="margin-top: 5%;">
+                        <input class="text-center" name="send_to" type="email" placeholder="Email" style="margin-top: 1%;">
+                        <input class="text-center" name="message" type="text" placeholder="Message" style="margin-top: 1%;">
+                        {% for message in messages %}
+                            <h3 style="text-align: center; color: green;margin-top: 2%;">    
+                                {{message}}
+                            </h3>
+                        {% endfor %}
+                        <div class="hover-buttons">
+                            <button type="submit" style="background-color: red;">
+                                <span class="btn btn-hover iq-button">
+                                <i ></i>
+                                Send
+                                </span>
+                            </button>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static "js/jquery-3.4.1.min.js" %}"></script>
+    <script src="{% static "js/popper.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/slick.min.js" %}"></script>
+    <script src="{% static "js/owl.carousel.min.js" %}"></script>
+    <script src="{% static "js/select2.min.js" %}"></script>
+    <script src="{% static "js/jquery.magnific-popup.min.js" %}"></script>
+    <script src="{% static "js/slick-animation.min.js" %}"></script>
+  
+    <script src="{% static "main.js" %}"></script>
+</body>
+</html>
