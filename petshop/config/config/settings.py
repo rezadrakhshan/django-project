@@ -40,7 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop',
     'blog',
-    'product'
+    'product',
+    "member",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +57,35 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    'blog.middleware.SaveIpAddressMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default ModelBackend
+    'allauth.account.auth_backends.AuthenticationBackend',  # Allauth authentication backend for social authentication
+]
+
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'APP': {
+            'client_id': '595417681132-g9kiujnvkp82dcollhm262svs2fear5s.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    },
+    'github': {
+        'APP': {
+            'client_id': '45d050599807eda0b6b4',
+            'secret': 'aacc4167abea9d83f942f06dc8590a61d481966a',
+            'key': ''
+        }
+    }
+}
 
 ROOT_URLCONF = 'config.urls'
 
@@ -66,6 +100,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'blog.context_processors.common_data',
             ],
         },
     },

@@ -11,6 +11,10 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
+
+class IpAddress(models.Model):
+    ipaddress = models.GenericIPAddressField()
+
 class Blog(models.Model):
     title = models.CharField(max_length=50)
     text = models.TextField()
@@ -19,6 +23,7 @@ class Blog(models.Model):
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     category = models.ManyToManyField(Category,related_name="blogs")
     publish = models.BooleanField(default=False)
+    hits = models.ManyToManyField(IpAddress, related_name="hits", blank=True)
 
     def __str__(self):
         return self.title
