@@ -1,0 +1,112 @@
+{% extends "registration/base.html" %}
+{% block title %}فهرست سفارشات{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+      <li class="breadcrumb-item active">فهرست سفارشات</li>
+      <li class="breadcrumb-item active">سفارشات</li>
+      <li class="breadcrumb-item active">داشبورد</li>
+      <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+    </ol>
+</div>
+{% endblock breadcrumb %}
+{% block main %}
+<div class="card">
+    <div class="card-header">
+        <div class="input-group input-group-sm" style="width: 150px;">
+            <input type="text" name="table_search" class="form-control float-right" placeholder="جستجو" >
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>                  
+          <tr>
+            <th>کاربر</th>
+            <th>محصول</th>
+            <th>وضعیت</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for i in order %}
+          <tr>
+            <td>{{i.user.user_name}}</td>
+            <td><a href="{% url "dashboard:order_edit" i.slug %}">{{i.product.title}}</a></td>
+            <td>              
+              <div class="progress progress-xs">
+                {% if i.status == "P" %}
+                <div class="progress-bar progress-bar-danger" style="width: 25%"></div>
+                {% elif i.status == "PR" %}
+                <div class="progress-bar progress-bar-danger" style="width: 50%"></div>
+                {% elif i.status == "S" %}
+                <div class="progress-bar bg-warning" style="width: 75%"></div>
+                {% elif i.status == "D" %}
+                    <div class="progress-bar bg-success" style="width: 100%"></div>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+    <div class="row">
+        <div class="col-sm-12 col-md-7">
+          <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+            <ul class="pagination">
+              {% if order.has_previous %}
+              <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ order.previous_page_number }}"
+                  aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+              {% else %}
+              <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+              {% endif %}
+              {% for i in order.paginator.page_range %}
+              {% if order.paginator.page_range|length == 1 %}
+              {% elif order.number == i %}
+              <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                  class="page-link">{{i}}</a></li>
+              {% else %}
+              <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                class="page-link">{{i}}</a></li>
+              {% endif %}
+              {% endfor %}
+              {% if order.has_next %}
+              <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ order.next_page_number }}" aria-controls="example2"
+                  data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+              {% else %}
+              <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('input[name="table_search"]').addEventListener('input', function() {
+            let input = this.value.trim().toLowerCase();
+            let rows = document.querySelectorAll('tbody tr');
+    
+            rows.forEach(row => {
+                let columns = row.querySelectorAll('td');
+                let found = false;
+    
+                columns.forEach(column => {
+                    if (column.textContent.trim().toLowerCase().includes(input)) {
+                        found = true;
+                    }
+                });
+    
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+    </script>
+{% endblock main %}

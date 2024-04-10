@@ -1,0 +1,488 @@
+{% extends "registration/base.html" %}
+{% block title %}حساب های ویژه{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+  <ol class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item active">حساب های ویژه</li>
+    <li class="breadcrumb-item active">کاربران</li>
+    <li class="breadcrumb-item active">داشبورد</li>
+    <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+  </ol>
+</div>
+{% endblock breadcrumb %}
+{% block main %}
+{% for message in messages %}
+{% if message.tags == "success" %}
+<div>
+    <div class="card bg-gradient-success">
+      <div class="card-header">
+          <div class="card-tools" style="float: left;">
+            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+            </button>
+          </div>
+        <h3 class="card-title" style="float: right;">تبریک</h3>
+
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{message}}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  {% else %}
+  <div>
+      <div class="card bg-gradient-danger">
+        <div class="card-header">
+            <div class="card-tools" style="float: left;">
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+              </button>
+            </div>
+          <h3 class="card-title" style="float: right;">اخطار</h3>
+  
+          <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          {{message}}
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+
+{% endif %}
+{% endfor %}
+<div class="card">
+    <div class="card-header d-flex p-0">
+      <ul class="nav nav-pills ml-auto p-2">
+        <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">همه</a></li>
+        <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">طلایی</a></li>
+        <li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">نقره ای</a></li>
+        <li class="nav-item"><a class="nav-link" href="#tab_4" data-toggle="tab">الماسی</a></li>
+      </ul>
+    </div><!-- /.card-header -->
+    <div class="card-body">
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab_1">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+          
+                  <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                      <input type="text" name="table_search" class="form-control float-right" placeholder="جستجو" >
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>کاربر</th>
+                        <th>نوع اکانت</th>
+                        <th>ساخته شدده در</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for user in users %}
+                      <tr>
+                        <td><a href="{% url "dashboard:super_user_edit" user.slug %}">{{user.user.user_name}}</a></td>
+                        {% if user.super_account == "D" %}
+                            <td>الماسی</td>
+                        {% elif user.super_account == "S" %}
+                            <td>نقره ای</td>
+                        {% else %}
+                            <td>طلایی</td>
+                        {% endif %}
+          
+                        <td>{{user.created_at}}</td>
+                        <td>
+                          <div class="btn-group btn-group-sm">
+                            <a href="{% url "dashboard:super_user_remove" user.slug %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-7">
+              <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                <ul class="pagination">
+                  {% if users.has_previous %}
+                  <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ users.previous_page_number }}"
+                      aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                  {% else %}
+                  <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                    aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                  {% endif %}
+                  {% for i in users.paginator.page_range %}
+                  {% if users.paginator.page_range|length == 1 %}
+                  {% elif users.number == i %}
+                  <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                      class="page-link">{{i}}</a></li>
+                  {% else %}
+                  <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                    class="page-link">{{i}}</a></li>
+                  {% endif %}
+                  {% endfor %}
+                  {% if users.has_next %}
+                  <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ users.next_page_number }}" aria-controls="example2"
+                      data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                  {% else %}
+                  <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                    data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.tab-pane -->
+        <div class="tab-pane" id="tab_2">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+          
+                  <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                      <input type="text" name="gold" class="form-control float-right" placeholder="جستجو" >
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>کاربر</th>
+                        <th>نوع اکانت</th>
+                        <th>ساخته شدده در</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for gold in gold %}
+                        <tr>
+                          <td>{{gold.user.user_name}}</td>
+                          <td>طلایی</td>
+                          <td>{{gold.created_at}}</td>
+                          <td>
+                            <div class="btn-group btn-group-sm">
+                              <a href="{% url "dashboard:super_user_remove" gold.slug %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-7">
+              <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                <ul class="pagination">
+                  {% if gold.has_previous %}
+                  <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ gold.previous_page_number }}"
+                      aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                  {% else %}
+                  <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                    aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                  {% endif %}
+                  {% for i in gold.paginator.page_range %}
+                  {% if gold.paginator.page_range|length == 1 %}
+                  {% elif gold.number == i %}
+                  <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                      class="page-link">{{i}}</a></li>
+                  {% else %}
+                  <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                    class="page-link">{{i}}</a></li>
+                  {% endif %}
+                  {% endfor %}
+                  {% if gold.has_next %}
+                  <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ gold.next_page_number }}" aria-controls="example2"
+                      data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                  {% else %}
+                  <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                    data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.tab-pane -->
+        <div class="tab-pane" id="tab_3">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+          
+                  <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                      <input type="text" name="silver" class="form-control float-right" placeholder="جستجو" >
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>کاربر</th>
+                        <th>نوع اکانت</th>
+                        <th>ساخته شدده در</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for silver in silver %}
+                        <tr>
+                          <td>{{silver.user.user_name}}</td>
+                          <td>نقره ای</td>
+                          <td>{{silver.created_at}}</td>
+                          <td>
+                            <div class="btn-group btn-group-sm">
+                              <a href="{% url "dashboard:super_user_remove" silver.slug %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-7">
+              <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                <ul class="pagination">
+                  {% if silver.has_previous %}
+                  <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ silver.previous_page_number }}"
+                      aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                  {% else %}
+                  <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                    aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                  {% endif %}
+                  {% for i in silver.paginator.page_range %}
+                  {% if silver.paginator.page_range|length == 1 %}
+                  {% elif silver.number == i %}
+                  <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                      class="page-link">{{i}}</a></li>
+                  {% else %}
+                  <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                    class="page-link">{{i}}</a></li>
+                  {% endif %}
+                  {% endfor %}
+                  {% if silver.has_next %}
+                  <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ silver.next_page_number }}" aria-controls="example2"
+                      data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                  {% else %}
+                  <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                    data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="tab_4">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+            
+                    <div class="card-tools">
+                      <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" name="d" class="form-control float-right" placeholder="جستجو" >
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body table-responsive p-0">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>کاربر</th>
+                          <th>نوع اکانت</th>
+                          <th>ساخته شدده در</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          {% for d in d %}
+                          <tr>
+                            <td>{{d.user.user_name}}</td>
+                            <td>الماسی</td>
+                            <td>{{d.created_at}}</td>
+                            <td>
+                              <div class="btn-group btn-group-sm">
+                                <a href="{% url "dashboard:super_user_remove" d.slug %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                              </div>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 col-md-7">
+                <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                  <ul class="pagination">
+                    {% if d.has_previous %}
+                    <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ d.previous_page_number }}"
+                        aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                    {% else %}
+                    <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                      aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                    {% endif %}
+                    {% for i in d.paginator.page_range %}
+                    {% if d.paginator.page_range|length == 1 %}
+                    {% elif d.number == i %}
+                    <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                        class="page-link">{{i}}</a></li>
+                    {% else %}
+                    <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                      class="page-link">{{i}}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if d.has_next %}
+                    <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ d.next_page_number }}" aria-controls="example2"
+                        data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                    {% else %}
+                    <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                      data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- /.tab-pane -->
+      </div>
+      <!-- /.tab-content -->
+    </div><!-- /.card-body -->
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('input[name="table_search"]').addEventListener('input', function() {
+            let input = this.value.trim().toLowerCase();
+            let rows = document.querySelectorAll('tbody tr');
+    
+            rows.forEach(row => {
+                let columns = row.querySelectorAll('td');
+                let found = false;
+    
+                columns.forEach(column => {
+                    if (column.textContent.trim().toLowerCase().includes(input)) {
+                        found = true;
+                    }
+                });
+    
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+    </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('input[name="gold"]').addEventListener('input', function() {
+            let input = this.value.trim().toLowerCase();
+            let rows = document.querySelectorAll('tbody tr');
+    
+            rows.forEach(row => {
+                let columns = row.querySelectorAll('td');
+                let found = false;
+    
+                columns.forEach(column => {
+                    if (column.textContent.trim().toLowerCase().includes(input)) {
+                        found = true;
+                    }
+                });
+    
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+    </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('input[name="silver"]').addEventListener('input', function() {
+            let input = this.value.trim().toLowerCase();
+            let rows = document.querySelectorAll('tbody tr');
+    
+            rows.forEach(row => {
+                let columns = row.querySelectorAll('td');
+                let found = false;
+    
+                columns.forEach(column => {
+                    if (column.textContent.trim().toLowerCase().includes(input)) {
+                        found = true;
+                    }
+                });
+    
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+    </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('input[name="d"]').addEventListener('input', function() {
+            let input = this.value.trim().toLowerCase();
+            let rows = document.querySelectorAll('tbody tr');
+    
+            rows.forEach(row => {
+                let columns = row.querySelectorAll('td');
+                let found = false;
+    
+                columns.forEach(column => {
+                    if (column.textContent.trim().toLowerCase().includes(input)) {
+                        found = true;
+                    }
+                });
+    
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+    </script>
+{% endblock main %}

@@ -1,0 +1,393 @@
+{% extends "registration/base.html" %}
+{% block title %}فهرست مقالات{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+  <ol class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item active">فهرست مقالات</li>
+    <li class="breadcrumb-item active">مقالات</li>
+    <li class="breadcrumb-item active">داشبورد</li>
+    <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+  </ol>
+</div>
+{% endblock breadcrumb %}
+{% block main %}
+{% for message in messages %}
+{% if message.tags == "success" %}
+<div>
+    <div class="card bg-gradient-success">
+      <div class="card-header">
+          <div class="card-tools" style="float: left;">
+            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+            </button>
+          </div>
+        <h3 class="card-title" style="float: right;">تبریک</h3>
+
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{message}}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  {% else %}
+  <div>
+      <div class="card bg-gradient-danger">
+        <div class="card-header">
+            <div class="card-tools" style="float: left;">
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+              </button>
+            </div>
+          <h3 class="card-title" style="float: right;">اخطار</h3>
+  
+          <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          {{message}}
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+
+{% endif %}
+{% endfor %}
+<div class="card">
+  <div class="card-header d-flex p-0">
+    <ul class="nav nav-pills ml-auto p-2">
+      <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">همه</a></li>
+      <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">منتشر شده</a></li>
+      <li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">منتشر نشده</a></li>
+    </ul>
+  </div><!-- /.card-header -->
+  <div class="card-body">
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab_1">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+        
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control float-right" placeholder="جستجو" >
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>آیدی</th>
+                      <th>نام مقاله</th>
+                      <th>نویسنده</th>
+                      <th>وضعیت</th>
+                      <th>تاریخ انتشار</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for blog in blogs %}
+                    <tr>
+                      <td>{{blog.id}}</td>
+                      <td><a href="{% url "dashboard:blog_edit" blog.id %}">{{blog.title}}</a></td>
+                      <td>{{blog.author.user_name}}</td>
+                      {% if blog.is_published == True %}
+                      <td><span class="tag tag-success">منتشر شده</span></td>
+                      {% else %}
+                      <td><span class="tag tag-success">منتشر نشده</span></td>
+                      {% endif %}
+        
+                      <td>{{blog.jpublish}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-7">
+            <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+              <ul class="pagination">
+                {% if blogs.has_previous %}
+                <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ blogs.previous_page_number }}"
+                    aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                {% else %}
+                <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                  aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                {% endif %}
+                {% for i in blogs.paginator.page_range %}
+                {% if blogs.paginator.page_range|length == 1 %}
+                {% elif blogs.number == i %}
+                <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                    class="page-link">{{i}}</a></li>
+                {% else %}
+                <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                  class="page-link">{{i}}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if blogs.has_next %}
+                <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ blogs.next_page_number }}" aria-controls="example2"
+                    data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                {% else %}
+                <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                  data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.tab-pane -->
+      <div class="tab-pane" id="tab_2">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+        
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="published" class="form-control float-right" placeholder="جستجو" >
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>آیدی</th>
+                      <th>نام مقاله</th>
+                      <th>نویسنده</th>
+                      <th>وضعیت</th>
+                      <th>تاریخ انتشار</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for blog in publisheds %}
+                    <tr>
+                      <td>{{blog.id}}</td>
+                      <td><a href="{% url "dashboard:blog_edit" blog.id %}">{{blog.title}}</a></td>
+                      <td>{{blog.author.user_name}}</td>
+                      {% if blog.is_published == True %}
+                      <td><span class="tag tag-success">منتشر شده</span></td>
+                      {% else %}
+                      <td><span class="tag tag-success">منتشر نشده</span></td>
+                      {% endif %}
+        
+                      <td>{{blog.jpublish}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-7">
+            <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+              <ul class="pagination">
+                {% if publisheds.has_previous %}
+                <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ publisheds.previous_page_number }}"
+                    aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                {% else %}
+                <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                  aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                {% endif %}
+                {% for i in publisheds.paginator.page_range %}
+                {% if publisheds.paginator.page_range|length == 1 %}
+                {% elif publisheds.number == i %}
+                <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                    class="page-link">{{i}}</a></li>
+                {% else %}
+                <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                  class="page-link">{{i}}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if publisheds.has_next %}
+                <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ publisheds.next_page_number }}" aria-controls="example2"
+                    data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                {% else %}
+                <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                  data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.tab-pane -->
+      <div class="tab-pane" id="tab_3">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+        
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="draft" class="form-control float-right" placeholder="جستجو" >
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>آیدی</th>
+                      <th>نام مقاله</th>
+                      <th>نویسنده</th>
+                      <th>وضعیت</th>
+                      <th>تاریخ انتشار</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for blog in drafts %}
+                    <tr>
+                      <td>{{blog.id}}</td>
+                      <td><a href="{% url "dashboard:blog_edit" blog.id %}">{{blog.title}}</a></td>
+                      <td>{{blog.author.user_name}}</td>
+                      {% if blog.is_published == True %}
+                      <td><span class="tag tag-success">منتشر شده</span></td>
+                      {% else %}
+                      <td><span class="tag tag-success">منتشر نشده</span></td>
+                      {% endif %}
+        
+                      <td>{{blog.jpublish}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-7">
+            <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+              <ul class="pagination">
+                {% if drafts.has_previous %}
+                <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ drafts.previous_page_number }}"
+                    aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                {% else %}
+                <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                  aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+                {% endif %}
+                {% for i in drafts.paginator.page_range %}
+                {% if drafts.paginator.page_range|length == 1 %}
+                {% elif drafts.number == i %}
+                <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                    class="page-link">{{i}}</a></li>
+                {% else %}
+                <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                  class="page-link">{{i}}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if drafts.has_next %}
+                <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ drafts.next_page_number }}" aria-controls="example2"
+                    data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                {% else %}
+                <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                  data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.tab-pane -->
+    </div>
+    <!-- /.tab-content -->
+  </div><!-- /.card-body -->
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('input[name="table_search"]').addEventListener('input', function() {
+          let input = this.value.trim().toLowerCase();
+          let rows = document.querySelectorAll('tbody tr');
+  
+          rows.forEach(row => {
+              let columns = row.querySelectorAll('td');
+              let found = false;
+  
+              columns.forEach(column => {
+                  if (column.textContent.trim().toLowerCase().includes(input)) {
+                      found = true;
+                  }
+              });
+  
+              if (found) {
+                  row.style.display = '';
+              } else {
+                  row.style.display = 'none';
+              }
+          });
+      });
+  });
+  </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('input[name="published"]').addEventListener('input', function() {
+          let input = this.value.trim().toLowerCase();
+          let rows = document.querySelectorAll('tbody tr');
+  
+          rows.forEach(row => {
+              let columns = row.querySelectorAll('td');
+              let found = false;
+  
+              columns.forEach(column => {
+                  if (column.textContent.trim().toLowerCase().includes(input)) {
+                      found = true;
+                  }
+              });
+  
+              if (found) {
+                  row.style.display = '';
+              } else {
+                  row.style.display = 'none';
+              }
+          });
+      });
+  });
+  </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('input[name="draft"]').addEventListener('input', function() {
+          let input = this.value.trim().toLowerCase();
+          let rows = document.querySelectorAll('tbody tr');
+  
+          rows.forEach(row => {
+              let columns = row.querySelectorAll('td');
+              let found = false;
+  
+              columns.forEach(column => {
+                  if (column.textContent.trim().toLowerCase().includes(input)) {
+                      found = true;
+                  }
+              });
+  
+              if (found) {
+                  row.style.display = '';
+              } else {
+                  row.style.display = 'none';
+              }
+          });
+      });
+  });
+  </script>
+  
+{% endblock main %}

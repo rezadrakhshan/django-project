@@ -1,0 +1,163 @@
+{% extends "registration/base.html" %}
+{% load humanize %}
+{% block title %}فهرست محصولات{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+      <li class="breadcrumb-item active">فهرست محصولات</li>
+      <li class="breadcrumb-item active">محصولات</li>
+      <li class="breadcrumb-item active">داشبورد</li>
+      <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+    </ol>
+</div>
+{% endblock breadcrumb %}
+{% block main %}
+{% for message in messages %}
+{% if message.tags == "success" %}
+<div>
+    <div class="card bg-gradient-success">
+      <div class="card-header">
+          <div class="card-tools" style="float: left;">
+            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+            </button>
+          </div>
+        <h3 class="card-title" style="float: right;">تبریک</h3>
+
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{message}}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  {% else %}
+  <div>
+      <div class="card bg-gradient-danger">
+        <div class="card-header">
+            <div class="card-tools" style="float: left;">
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+              </button>
+            </div>
+          <h3 class="card-title" style="float: right;">اخطار</h3>
+  
+          <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          {{message}}
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+
+{% endif %}
+{% endfor %}
+<div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+
+          <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="table_search" class="form-control float-right" placeholder="جستجو">
+            </div>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>آیدی</th>
+                <th>عنوان</th>
+                <th>قیمت</th>
+                <th>تخفیف</th>
+                <th>قیمت با تخفیف</th>
+                <th>وضعیت</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+              <tr>
+                <td>{{product.id}}</td>
+                <td><a href="{% url "dashboard:product_edit" product.id %}">{{product.title}}</a></td>
+                <td>{{product.price|floatformat:1|intcomma}}تومان</td>
+                <td>{{product.discount}}%</td>
+                <td>{{product.price_with_discount|floatformat:1|intcomma}}تومان</td>
+                {% if product.availble == True %}
+                <td>موجود</td>
+                {% else %}
+                <td>ناموجود</td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+      <div class="row">
+        <div class="col-sm-12 col-md-7">
+          <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+            <ul class="pagination">
+              {% if products.has_previous %}
+              <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ products.previous_page_number }}"
+                  aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+              {% else %}
+              <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+              {% endif %}
+              {% for i in products.paginator.page_range %}
+              {% if products.paginator.page_range|length == 1 %}
+              {% elif products.number == i %}
+              <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                  class="page-link">{{i}}</a></li>
+              {% else %}
+              <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                class="page-link">{{i}}</a></li>
+              {% endif %}
+              {% endfor %}
+              {% if products.has_next %}
+              <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ products.next_page_number }}" aria-controls="example2"
+                  data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+              {% else %}
+              <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('input[name="table_search"]').addEventListener('input', function() {
+            let input = this.value.trim().toLowerCase();
+            let rows = document.querySelectorAll('tbody tr');
+    
+            rows.forEach(row => {
+                let columns = row.querySelectorAll('td');
+                let found = false;
+    
+                columns.forEach(column => {
+                    if (column.textContent.trim().toLowerCase().includes(input)) {
+                        found = true;
+                    }
+                });
+    
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+    </script>
+{% endblock main %}

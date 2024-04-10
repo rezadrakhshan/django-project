@@ -1,0 +1,157 @@
+{% load i18n %}
+{% load static %}
+{% load ratings %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کد بیان</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+   <script src="{% static 'star-ratings/js/dist/init.js' %}"></script>
+  <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
+</head>
+<style>
+  .divider { 
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.divider::before, .divider::after {
+  flex: 1;
+  content: '';
+  padding: 3px;
+  background-color: rgb(0, 0, 0);
+  margin: 5px;
+}
+
+</style>
+<body>
+{% include "include/header.html" %}
+  <div class="content">
+    <div class="blog-post">
+      <div class="divider"><h1>{{object.title}}</h1></div>
+      <p style="text-align: start;display: block;">{{object.text|safe}}</p>
+    </div>
+    
+    <table class="table">
+      
+      <tr>
+        <th>نویسنده</th>
+        <td><a href="{% url 'member:user_profile' object.author.id %}">{{object.author.user_name}}</a></td>
+      </tr>
+      <tr>
+        <th>تاریخ انتشار</th>
+        <td>{{object.jpublish}}</td>
+      </tr>
+      <tr>
+        <th>تعداد نظرات</th>
+        <td>{{ lencomments }}</td>
+      </tr>
+      <tr>
+        <th>تعداد بازدید ها</th>
+        <td>{{object.hits.count}}</td>
+      </tr>
+    </table>
+    {% if object.is_published == True %}
+    <div style="display: block;">
+      <legend>به این مقاله امتیاز بدهید:</legend>
+      
+      {% ratings object %}
+    </div>
+
+    {% endif %}
+    <div id="accordion">
+
+      <div class="card">
+        <div class="card-header">
+          <a class="card-link" data-toggle="collapse" href="#collapseOne">
+            مقالات نوشته شده توسط ({{object.author.user_name}})
+          </a>
+        </div>
+        <div id="collapseOne" class="collapse show" data-parent="#accordion">
+          {% for author in author %}
+          <a href="{% url "blog:detail" author.slug %}">
+            <div class="card-body">
+              {{author.title}}
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>  
+    </div>
+    <form style="margin-top: 5%;" method="post"> 
+      {% csrf_token %}
+      <h2>افزودن نظر</h2>
+      <div class="form-group">
+        <textarea required name="text" class="form-control" id="comment" rows="5" placeholder="نظر خود را وارد کنید"></textarea>
+      </div>
+      <button style="margin-bottom: 2%;" type="submit" class="btn btn-primary">ارسال نظر</button>
+    </form>
+    <ul class="comments-list container">
+      {% for comment in comments %}
+      <div class="media border p-3" style="margin-top: 2%;">
+        <div class="media-body">
+          <h4>{{comment.user.user_name}} {% if comment.user == object.author %}<small>(نویسنده)</small>{% endif %} <small><i>در {{comment.jpublish}}</i></small>
+            {% if comment.user == crn_user %}
+              <a href="{% url "blog:deletecomment" comment.id %}"><svg style="color:red;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+              </svg></a>
+            {% endif %}
+        </h4>
+          <p>{{comment.text}}</p>
+          <hr>
+          {% for reply in comment.replies.all %}
+          <div style="padding: 2%;">
+            <h4>{{reply.user.user_name}}{% if reply.user == object.author %}<small>(نویسنده)</small>{% endif %} <small>پاسخ داده</small> <small><i>در {{reply.jpublish}}</i></small>
+              {% if comment.user == crn_user %}
+                <a href="{% url "blog:deletecomment" reply.id %}"><svg style="color:red;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                </svg></a>
+              {% endif %}
+            </h4>
+            <p>{{reply.text}}</p>
+          </div>
+          {% endfor %}
+          <form action="{% url "blog:reply" comment.id %}" class="form-group" method="post">
+            {% csrf_token %}
+            <input name="text" type="text" class="form-control" required>
+            <button type="submit" class="btn btn-primary" style="margin-top: 3%;">پاسخ</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  // Disable form submissions if there are invalid fields
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Get the forms we want to add validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+  </script>
+</html>

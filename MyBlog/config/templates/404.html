@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>خطا 404 - صفحه یافت نشد</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .error-container {
+      text-align: center;
+    }
+    .error-code {
+      font-size: 72px;
+      font-weight: bold;
+      color: #dc3545;
+      margin-bottom: 20px;
+    }
+    .error-message {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .back-to-home {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <div class="error-code">404</div>
+    <div class="error-message">صفحه‌ای که به دنبال آن بودید یافت نشد.</div>
+    <a href="{% url "main:home" %}" class="btn btn-primary back-to-home">بازگشت به صفحه اصلی</a>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

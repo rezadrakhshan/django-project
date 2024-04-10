@@ -1,0 +1,115 @@
+{% extends "registration/base.html" %}
+{% block title %}نظرات{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item active">نظرات</li>
+        <li class="breadcrumb-item active">مقالات</li>
+        <li class="breadcrumb-item active">داشبورد</li>
+        <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+    </ol>
+</div>
+{% endblock breadcrumb %}
+
+{% block main %}
+<div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+  
+          <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="table_search" class="form-control float-right" placeholder="جستجو" >
+            </div>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>آیدی</th>
+                <th>کاربر</th>
+                <th>مقاله</th>
+                <th>متن</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for comment in comments %}
+              <tr>
+                <td>{{comment.id}}</td>
+                <td>{{comment.user.user_name}}</td>
+                <td>{{comment.blog.title}}</td>
+                <td>{{comment.text}}</td>
+                <td><a href="{% url "dashboard:blog_comment_remove" comment.id %}" class="btn btn-danger" style="color:white;">
+                    <i class="fas fa-trash"></i>
+                  </a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-7">
+      <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+        <ul class="pagination">
+          {% if comments.has_previous %}
+          <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ comments.previous_page_number }}"
+              aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+          {% else %}
+          <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+            aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+          {% endif %}
+          {% for i in comments.paginator.page_range %}
+          {% if comments.paginator.page_range|length == 1 %}
+          {% elif comments.number == i %}
+          <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+              class="page-link">{{i}}</a></li>
+          {% else %}
+          <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+            class="page-link">{{i}}</a></li>
+          {% endif %}
+          {% endfor %}
+          {% if comments.has_next %}
+          <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ comments.next_page_number }}" aria-controls="example2"
+              data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+          {% else %}
+          <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+            data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          document.querySelector('input[name="table_search"]').addEventListener('input', function() {
+              let input = this.value.trim().toLowerCase();
+              let rows = document.querySelectorAll('tbody tr');
+      
+              rows.forEach(row => {
+                  let columns = row.querySelectorAll('td');
+                  let found = false;
+      
+                  columns.forEach(column => {
+                      if (column.textContent.trim().toLowerCase().includes(input)) {
+                          found = true;
+                      }
+                  });
+      
+                  if (found) {
+                      row.style.display = '';
+                  } else {
+                      row.style.display = 'none';
+                  }
+              });
+          });
+      });
+      </script>
+{% endblock main %}

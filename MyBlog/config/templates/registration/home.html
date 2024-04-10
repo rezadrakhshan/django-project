@@ -1,0 +1,237 @@
+{% extends "registration/base.html" %}
+{% block title %}داشبورد{% endblock %}
+{% block main %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <!-- small card -->
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3>{{user}}</h3>
+    
+            <p>ثبت نام کاربران</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <a href="{% url "dashboard:user_list" %}" class="small-box-footer">
+            اطلاعات بیشتر  <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+    <div class="col-lg-3 col-6">
+        <!-- small card -->
+        <div class="small-box bg-danger">
+          <div class="inner">
+            <h3>{{comment}}</h3>
+    
+            <p>نظرات</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-comment"></i>
+          </div>
+          <a href="{% url "dashboard:blog_comment" %}" class="small-box-footer">
+            اطلاعات بیشتر  <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+    <div class="col-lg-3 col-6">
+        <!-- small card -->
+        <div class="small-box bg-primary">
+          <div class="inner">
+            <h3>{{blog}}</h3>
+    
+            <p>مقالات</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-copy"></i>
+          </div>
+          <a href="{% url "dashboard:blog_list" %}" class="small-box-footer">
+            اطلاعات بیشتر  <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-6">
+        <!-- small card -->
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3>{{product}}</h3>
+
+            <p>سفارش جدید</p>
+          </div>
+          <div class="icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <a href="#" class="small-box-footer">
+            اطلاعات بیشتر  <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <!-- AREA CHART -->
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title" style="float: right;">وضعیت مقالات</h3>
+
+
+      </div>
+      <div class="card-body">
+          <canvas id="myPieChart" style="height: 250px; min-height: 250px; display: block; width: 209px;" width="209" height="250" class="chartjs-render-monitor"></canvas>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+    <!-- DONUT CHART -->
+    <div class="card card-danger">
+      <div class="card-header">
+        <h3 class="card-title" style="float:right;">وضعیت سفارش ها</h3>
+
+
+      </div>
+      <div class="card-body" style="display: block;"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+        <canvas id="myDonutChart" style="height: 231px; min-height: 230px; display: block; width: 209px;" width="209" height="231" class="chartjs-render-monitor"></canvas>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+  </div>
+  <!-- /.col (LEFT) -->
+  <div class="col-md-6">
+    <!-- LINE CHART -->
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title" style="float:right;">مقالات برتر</h3>
+
+      </div>
+      <div class="card-body">
+        <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+          <canvas id="myBarChart" style="height: 250px; min-height: 250px; display: block; width: 209px;" width="209" height="250" class="chartjs-render-monitor"></canvas>
+        </div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+    <!-- /.card -->
+
+  </div>
+  <!-- /.col (RIGHT) -->
+</div>
+<script>
+  var ctx = document.getElementById('myPieChart').getContext('2d');
+  var myPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: {{labels|safe}},
+          datasets: [{
+              label: 'تعداد',
+              data: {{data|safe}},
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+      }
+  });
+</script>
+<script>
+  // Data for the bar chart
+  var data = {
+      labels: {{top_labels|safe}},
+      datasets: [{
+          label: 'تعداد بازدید',
+          data: {{top_data|safe}},
+          backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+      }]
+  };
+
+  // Get the context of the canvas element we want to select
+  var ctx = document.getElementById("myBarChart").getContext('2d');
+
+  // Create the bar chart with RTL support
+  var myBarChart = new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: {
+          scales: {
+              xAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }],
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          },
+          plugins: {
+              rtl: true
+          }
+      }
+  });
+</script>
+<script>
+  var ctx = document.getElementById('myDonutChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+          labels: {{order_labels|safe}},
+          datasets: [{
+              label: 'تعداد:',
+              data: {{order_data|safe}},
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 1, 192, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 1, 192, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+      }
+  });
+</script>
+{% endblock main %}  

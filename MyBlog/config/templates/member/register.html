@@ -1,0 +1,80 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورود به وبلاگ</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      width: 400px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      text-align: center;
+    }
+    .forgot-register {
+      margin-top: 20px;
+    }
+    .error-box {
+      color: #721c24;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>ثبت نام در کد بیان</h2>
+    {% for message in messages %}
+    <div class="error-box" id="error-box">
+      {{message}}
+    </div>
+    {% endfor %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for=""> نام کاربری</label>
+        <input required name="username" type="text" class="form-control" id="inputName" >
+      </div>
+      <div class="form-group">
+        <label for="">ایمیل</label>
+        <input required name="email" type="email" class="form-control" id="inputName">
+      </div>
+      <div class="form-group">
+        <label for="">گذرواژه</label>
+        <input required name="password" type="password" class="form-control" id="inputPassword">
+      </div>
+      <div class="form-group">
+        <label for="">تکرار گذرواژه</label>
+        <input required name="password2" type="password" class="form-control" id="inputPassword">
+      </div>
+      <button type="submit" class="btn btn-primary">ثبت نام</button>
+    </form>
+    <div class="forgot-register">
+      <a href="{% url 'member:login' %}">ورود به کد بیان</a>
+    </div>
+    <div style="display: flex;justify-content: space-evenly;">
+      <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-danger btn-google" style="margin-top: 3%;width: 128px;">ورود با گوگل</a>
+      <a href="{% url 'social:begin' 'github' %}" class="btn btn-dark btn-google" style="margin-top: 3%;">ورود باگیت هاب</a>
+    </div>
+  </div>
+</body>
+
+</html>

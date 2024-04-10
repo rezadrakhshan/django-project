@@ -1,0 +1,109 @@
+{% extends "registration/base.html" %}
+{% block title %}فهرست دنبال کنندگان{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+      <li class="breadcrumb-item active">فهرست دنبال کنندگان</li>
+      <li class="breadcrumb-item active">کاربران</li>
+      <li class="breadcrumb-item active">داشبورد</li>
+      <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+    </ol>
+  </div>
+{% endblock breadcrumb %}
+{% block main %}
+<div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+  
+          <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="table_search" class="form-control float-right" placeholder="جستجو" >
+            </div>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>آیدی</th>
+                <th>دنبال کننده</th>
+                <th>دنبال شونده</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for list in list %}
+              <tr>
+                <td>{{list.id}}</td>
+                <td>{{list.follower.user_name}}</td>
+                <td>{{list.user.user_name}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-7">
+      <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+        <ul class="pagination">
+          {% if list.has_previous %}
+          <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ list.previous_page_number }}"
+              aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+          {% else %}
+          <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+            aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+          {% endif %}
+          {% for i in list.paginator.page_range %}
+          {% if list.paginator.page_range|length == 1 %}
+          {% elif list.number == i %}
+          <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+              class="page-link">{{i}}</a></li>
+          {% else %}
+          <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+            class="page-link">{{i}}</a></li>
+          {% endif %}
+          {% endfor %}
+          {% if list.has_next %}
+          <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ list.next_page_number }}" aria-controls="example2"
+              data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+          {% else %}
+          <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+            data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          document.querySelector('input[name="table_search"]').addEventListener('input', function() {
+              let input = this.value.trim().toLowerCase();
+              let rows = document.querySelectorAll('tbody tr');
+      
+              rows.forEach(row => {
+                  let columns = row.querySelectorAll('td');
+                  let found = false;
+      
+                  columns.forEach(column => {
+                      if (column.textContent.trim().toLowerCase().includes(input)) {
+                          found = true;
+                      }
+                  });
+      
+                  if (found) {
+                      row.style.display = '';
+                  } else {
+                      row.style.display = 'none';
+                  }
+              });
+          });
+      });
+      </script>
+{% endblock main %}

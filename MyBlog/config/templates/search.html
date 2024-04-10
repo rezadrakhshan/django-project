@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+  <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+
+  <title>کد بیان</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static "css/style.css" %}">
+</head>
+
+<style>
+  /* Pagination links */
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+/* Style the active/current link */
+.pagination a.active {
+  background-color: dodgerblue;
+  color: white;
+}
+
+/* Add a grey background color on mouse-over */
+.pagination a:hover:not(.active) {background-color: #ddd;}
+</style>
+
+<body dir="rtl">
+  {% include "include/header.html" %}
+  {% if request.resolver_match.url_name == "search" %}
+  <div class="content">
+    <div class="container mt-3">
+      <h2>جستجو برای:{{word}}</h2>
+      <br>
+      <table class="table table-bordered">
+        <legend>کاربران</legend>
+        <thead>
+          <tr>
+            <th>نام کاربری</th>
+            <th>تعداد دنبال کننده ها</th>
+            <th>تعداد دنبال شونده ها</th>
+          </tr>
+        </thead>
+        <tbody id="myTable">
+          {% for user in profiles %}
+          <tr>
+            <td><a href="{% url 'member:user_profile' user.profile.id %}">{{user.profile.user_name}}</a></td>
+            <td>{{ user.follower }}</td>
+            <td>{{ user.following }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3">کاربر ای یافت نشد!!</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <table class="table table-bordered">
+        <legend>مقالات</legend>
+        <thead>
+          <tr>
+            <th>نام مقاله</th>
+            <th>تاریخ انتشار</th>
+            <th>نویسنده</th>
+          </tr>
+        </thead>
+        <tbody id="myTable">
+          {% for blog in blogs %}
+          <tr>
+            <td><a href="{% url "blog:detail" blog.slug %}">{{blog.title}}</a></td>
+            <td>{{blog.jpublish}}</td>
+            <td>{{blog.author.user_name}}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3">مقاله ای یافت نشد!!</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    
+      
+
+    </div>
+  </div>
+  {% endif %}
+</body>
+
+</html>

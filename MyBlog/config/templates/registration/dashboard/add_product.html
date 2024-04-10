@@ -1,0 +1,126 @@
+{% extends "registration/base.html" %}
+{% block title %}افزودن محصول{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+      <li class="breadcrumb-item active">افزودن محصول</li>
+      <li class="breadcrumb-item active">محصولات</li>
+      <li class="breadcrumb-item active">داشبورد</li>
+      <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+    </ol>
+</div>
+{% endblock breadcrumb %}
+{% block main %}
+{% for message in messages %}
+{% if message.tags == "success" %}
+<div>
+    <div class="card bg-gradient-success">
+      <div class="card-header">
+          <div class="card-tools" style="float: left;">
+            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+            </button>
+          </div>
+        <h3 class="card-title" style="float: right;">تبریک</h3>
+
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{message}}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  {% else %}
+  <div>
+      <div class="card bg-gradient-danger">
+        <div class="card-header">
+            <div class="card-tools" style="float: left;">
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+              </button>
+            </div>
+          <h3 class="card-title" style="float: right;">اخطار</h3>
+  
+          <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          {{message}}
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+
+{% endif %}
+{% endfor %}
+<div class="card card-primary">
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form role="form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="card-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">عنوان</label>
+          <input name="title" type="text" class="form-control" id="exampleInputEmail1" required>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">توضیحات</label>
+          <textarea name="description" class="form-control" id="exampleInputPassword1" id="" cols="30" rows="10" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">نویسنده</label>
+            <input name="author" type="text" class="form-control" id="exampleInputEmail1" required>
+          </div>
+        <div class="form-group">
+          <label for="exampleInputFile">تصویر</label>
+          <div class="input-group">
+            <div class="custom-file">
+              <input name="image" type="file" class="custom-file-input" id="exampleInputFile" required>
+              <label class="custom-file-label" for="exampleInputFile">انتخاب تصویر</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">تعداد صفحات</label>
+          <input name="page_count" type="number" class="form-control" id="exampleInputEmail1" required>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">سال انتشار</label>
+          <input name="publication_date" type="text" class="form-control" id="exampleInputEmail1" required>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">نوع جلد</label>
+          <input name="book_cover" type="text" class="form-control" id="exampleInputEmail1" required>
+        </div>
+        <div class="form-group">
+          <label>برچسب</label>
+          <select class="custom-select" name="tag">
+              <option value="H">فروش داغ</option>
+              <option value="D">تخفیف ویژه</option>
+              <option value="N">جدید</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">قیمت</label>
+          <input name="price" type="number" class="form-control" id="exampleInputEmail1" required>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">تخفیف</label>
+          <input name="discount" type="number" class="form-control" id="exampleInputEmail1" required>
+        </div>
+        <div class="form-check">
+          <input name="availble" type="checkbox" class="form-check-input" id="exampleCheck1" checked>
+          <label for="exampleInputEmail1">موجود است؟</label>
+        </div>
+      </div>
+      <!-- /.card-body -->
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">ثبت</button>
+      </div>
+    </form>
+    
+  </div>
+{% endblock main %}

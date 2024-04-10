@@ -1,0 +1,166 @@
+{% extends "registration/base.html" %}
+{% block title %}{{blog.title}}{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+  <ol class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item active">ویرایش مقاله</li>
+    <li class="breadcrumb-item active">فهرست مقالات</li>
+    <li class="breadcrumb-item active">مقالات</li>
+    <li class="breadcrumb-item active">داشبورد</li>
+    <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+  </ol>
+</div>
+{% endblock breadcrumb %}
+{% block main %}
+{% load static %}
+<script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% for message in messages %}
+{% if message.tags == "success" %}
+<div>
+    <div class="card bg-gradient-success">
+      <div class="card-header">
+          <div class="card-tools" style="float: left;">
+            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+            </button>
+          </div>
+        <h3 class="card-title" style="float: right;">تبریک</h3>
+
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{message}}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  {% else %}
+  <div>
+      <div class="card bg-gradient-danger">
+        <div class="card-header">
+            <div class="card-tools" style="float: left;">
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+              </button>
+            </div>
+          <h3 class="card-title" style="float: right;">اخطار</h3>
+  
+          <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          {{message}}
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+
+{% endif %}
+{% endfor %}
+<div class="card card-primary">
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form method="post" action="">
+        {% csrf_token %}
+      <div class="card-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">عنوان</label>
+          <input name="title" type="text" class="form-control" value="{{blog.title}}">
+        </div>
+        <div class="form-group">
+            <label>دسته بندی</label>
+            <select class="form-control" name="category">
+            {% for category in categories %}
+                {% if category.title == blog.category.title %}
+                    <option value="{{category.id}}" selected>{{category.title}}</option>
+                {% else %}
+                    <option value="{{category.id}}">{{category.title}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        </div>
+        <div class="form-group">
+            <label>برچسب ها</label>
+            <input style="margin-bottom: 1%;" class="form-control" type="text" id="mySearch" onkeyup="myFunction()" placeholder="جستجو.." title="Type in a category">
+            <select multiple="" class="form-control" id="myMenu" name="tags">
+                {% for category in categories %}
+                    {% if category in blog.tags.all %}
+                        <option value="{{category.id}}" selected>{{category.title}}</option>
+                    {% else %}
+                        <option value="{{category.id}}">{{category.title}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>نویسنده</label>
+            <select class="form-control" name="author">
+            {% for profile in users %}
+                {% if profile == blog.author %}
+                    <option value="{{profile.id}}" selected>{{profile.user_name}}</option>
+                {% else %}
+                    <option value="{{profile.id}}">{{profile.user_name}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">متن :</label>
+            <textarea class="form-control" id="editor" name="text">{{blog.text}}</textarea>
+            <div class="invalid-feedback" id="editorError"></div>
+            <script>
+              CKEDITOR.replace('editor', {
+                language: 'fa',
+                filebrowserUploadUrl: '/ckeditor/upload/',
+                // Other CKEditor configurations can be added here
+              });
+              function validateForm() {
+                var editorContent = CKEDITOR.instances.editor.getData();
+                if (editorContent.trim() === '') {
+                  document.getElementById('editorError').style.display = 'block';
+                  return false; // Prevent form submission
+                }
+                return true; // Allow form submission
+              }
+
+            </script>
+          </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">شناسه</label>
+          <input name="slug" type="text" class="form-control" id="exampleInputPassword1" value="{{blog.slug}}">
+        </div>
+        <div class="form-check">
+          <input name="is_published" type="checkbox" class="form-check-input" id="exampleCheck1" {% if blog.is_published == True %}checked{% endif %} name="is_published">
+          <label class="form-check-label" for="exampleCheck1">منتشر شود؟</label>
+        </div>
+      </div>
+
+      <!-- /.card-body -->
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">ثبت</button>
+        <a href="{% url "dashboard:blog_remove" blog.id %}" class="btn btn-danger">حذف</a>
+      </div>
+    </form>
+  </div>
+  <script>
+    function myFunction() {
+      var input, filter, select, options, option, i;
+      input = document.getElementById("mySearch");
+      filter = input.value.toUpperCase();
+      select = document.getElementById("myMenu");
+      options = select.getElementsByTagName("option");
+  
+      for (i = 0; i < options.length; i++) {
+          option = options[i];
+          if (option.textContent.toUpperCase().indexOf(filter) > -1) {
+              option.style.display = "";
+          } else {
+              option.style.display = "none";
+          }
+      }
+  }
+    </script>
+{% endblock main %}

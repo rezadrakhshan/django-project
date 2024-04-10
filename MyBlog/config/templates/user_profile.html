@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+  <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+  <title>کد بیان</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static "css/style.css" %}">
+</head>
+ 
+<style>
+  .accordion {
+    display: block;
+    direction: rtl;
+    font-weight: bold;
+    background-color: white;
+    color: #444;
+    cursor: pointer;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    text-align: right;
+    outline: none;
+    transition: 0.4s;
+
+  }
+  
+  .accordion:hover {
+    text-decoration: none;
+    color: black;
+    background-color: #ccc; 
+  }
+  
+  .panel {
+    padding: 18px;
+    display: none;
+    background-color:   white;
+    overflow: hidden;
+  }
+  </style>
+<body dir="rtl">
+  {% include "include/header.html" %}
+  <div class="content">
+    <div style="display: flex;justify-content: space-between;padding: 5% 0% 0% 5%;">
+        <p style="margin-left: 50%;">
+            <legend>{{user.user_name}}</legend>
+        </p>
+        <div class="form-group">
+          {% if text == "دنبال کردن" %}
+            <a href="{% url "member:follow" user.id %}" class="btn btn-danger">{{text}}</a>
+          {% else %}
+            <a href="{% url "member:follow" user.id %}" class="btn btn-info">{{text}}</a>
+          {% endif %}
+        </div>
+    </div>
+    <hr color="black">
+    <table class="table">
+      
+        <tr>
+          <th>نام</th>
+          <td>{{user.first_name}}</td>
+        </tr>
+        <tr>
+          <th>نام خانوادگی</th>
+          <td>{{user.last_name}}</td>
+        </tr>
+        <tr>
+          <th>ایمیل</th>
+          <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+          <th>تعداد مقالات</th>
+          <td>{{ blogs|length }}</td>
+        </tr>
+      </table>
+      <a class="accordion">دنبال کنندگان + </a>
+        <div class="panel">
+          {% for following in user_following %}
+          <p>{{following.user.user_name}}</p>
+          {% empty %}
+          <p>دنبال کننده ای وجود ندارد!</p>
+          {% endfor %}
+        </div>
+      <a class="accordion">دنبال شوندگان + </a>
+        <div class="panel">
+          {% for follower in user_follower %}
+          <p>{{follower.follower.user_name}}</p>
+          {% empty %}
+          <p>دنبال شونده ای وجود ندارد</p>
+          {% endfor %}
+        </div>
+      <table class="table table-bordered">
+        <legend>مقالات</legend>
+        <fieldset>
+            <thead>
+                <tr>
+                  <th>نام مقاله</th>
+                  <th>تاریخ انتشار</th>
+                  <th>دسته بندی</th>
+                  <th>برچسب ها</th>
+                </tr>
+              </thead>
+              <tbody id="myTable">
+                {% for blog in blogs %}
+                <tr>
+                  <td><a href="{% url "blog:detail" blog.slug %}">{{blog.title}}</a></td>
+                  <td>{{blog.jpublish}}</td>
+                  <td>{{blog.category}}</td>
+                  {% for tag in blog.tags.all %}
+                      <td><span class="text-body">{{tag}},</span></td>
+                  {% endfor %}
+                  
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3">این کاربر مقاله ای ننوشته است</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+        </fieldset>
+      </table>
+  </div>
+</body>
+<script>
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+  
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+    });
+  }
+  </script>
+</html>

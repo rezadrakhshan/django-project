@@ -1,0 +1,218 @@
+{% extends "registration/base.html" %}
+{% load humanize %}
+{% block title %}فهرست کاربران{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+      <li class="breadcrumb-item active">فهرست کاربران</li>
+      <li class="breadcrumb-item active">کاربران</li>
+      <li class="breadcrumb-item active">داشبورد</li>
+      <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+    </ol>
+  </div>
+{% endblock breadcrumb %}
+{% block main %}
+{% for message in messages %}
+{% if message.tags == "success" %}
+<div>
+    <div class="card bg-gradient-success">
+      <div class="card-header">
+          <div class="card-tools" style="float: left;">
+            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+            </button>
+          </div>
+        <h3 class="card-title" style="float: right;">تبریک</h3>
+
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{message}}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  {% else %}
+  <div>
+      <div class="card bg-gradient-danger">
+        <div class="card-header">
+            <div class="card-tools" style="float: left;">
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+              </button>
+            </div>
+          <h3 class="card-title" style="float: right;">اخطار</h3>
+  
+          <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          {{message}}
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+
+{% endif %}
+{% endfor %}
+<div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+
+          <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input name="table_search" type="text" class="form-control float-right" placeholder="جستجو">
+            </div>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>شناسه</th>
+                <th>نام</th>
+                <th>نام خانوادگی</th>
+                <th>نام کاربری</th>
+                <th>اعتبار</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                  <td>{{user.id}}</td>
+                  <td>{{user.first_name}}</td>
+                  <td>{{user.last_name}}</td>
+                  <td>{{user.user_name}}</td>
+                  <td>{{user.amount|floatformat:1|intcomma }}تومان</td>
+                  {% if request.user.is_superuser %}
+                  <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-info{{user.id}}">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <div class="btn-group btn-group-sm">
+                    <a href="{% url "dashboard:user_remove" user.id %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                  </div></td>
+                  {% endif %}
+                </tr>
+                <div class="modal fade" id="modal-info{{user.id}}" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content bg-default">
+                        <div class="modal-header">
+                          <h4 class="modal-title">{{user.user_name}}</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        </div>
+                        
+                        <form action="{% url "dashboard:user_edit" user.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">نام</label>
+                                    <input name="first_name" type="text" class="form-control" id="exampleInputEmail1" value="{{user.first_name}}">
+                                  </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">نام خانوادگی</label>
+                                    <input name="last_name" type="text" class="form-control" id="exampleInputEmail1" value="{{user.last_name}}">
+                                  </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">نام کاربری</label>
+                                    <input name="user_name" type="text" class="form-control" id="exampleInputEmail1" value="{{user.user_name}}">
+                                  </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">ایمیل</label>
+                                    <input name="email" type="email" class="form-control" id="exampleInputEmail1" value="{{user.email}}">
+                                  </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">آدرس</label>
+                                    <input name="address" type="text" class="form-control" id="exampleInputEmail1" value="{{user.address}}">
+                                  </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">اعتبار</label>
+                                    <input name="amount" type="number" class="form-control" id="exampleInputEmail1" value="{{user.amount}}">
+                                </div>
+                                {% if request.user.is_superuser %}
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input" id="exampleCheck1" {% if user.user.is_staff == True %}checked{% endif %} name="is_superuser">
+                                  <label class="form-check-label" for="exampleCheck1">وضعیت کارمندی</label>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                              <button type="submit" class="btn btn-outline-success">ثبت</button>
+                            </div>
+                        </form>
+                      </div>
+                      <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                  </div>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-7">
+          <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+            <ul class="pagination">
+              {% if users.has_previous %}
+              <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ users.previous_page_number }}"
+                  aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+              {% else %}
+              <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+              {% endif %}
+              {% for i in users.paginator.page_range %}
+              {% if users.paginator.page_range|length == 1 %}
+              {% elif users.number == i %}
+              <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                  class="page-link">{{i}}</a></li>
+              {% else %}
+              <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                class="page-link">{{i}}</a></li>
+              {% endif %}
+              {% endfor %}
+              {% if users.has_next %}
+              <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ users.next_page_number }}" aria-controls="example2"
+                  data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+              {% else %}
+              <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- /.card -->
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('input[name="table_search"]').addEventListener('input', function() {
+            let input = this.value.trim().toLowerCase();
+            let rows = document.querySelectorAll('tbody tr');
+    
+            rows.forEach(row => {
+                let columns = row.querySelectorAll('td');
+                let found = false;
+    
+                columns.forEach(column => {
+                    if (column.textContent.trim().toLowerCase().includes(input)) {
+                        found = true;
+                    }
+                });
+    
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+    </script>
+{% endblock main %}

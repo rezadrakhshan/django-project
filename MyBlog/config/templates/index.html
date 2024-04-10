@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+  <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+  <title>کد بیان</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static "css/style.css" %}">
+</head>
+
+<style>
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+
+.pagination a.active {
+  background-color: dodgerblue;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+</style>
+
+<body dir="rtl">
+  {% include "include/header.html" %}
+  {% if request.resolver_match.url_name == "home" %}
+
+
+
+  <div class="content">
+    
+    <div class="best-blogs">
+      <form action="{% url "main:search" %}" style="width: 98.5%;" method="post">
+        {% csrf_token %}
+        <div>
+          <input name="word" class="form-control" id="myInput" type="text" placeholder="جستجو.." style="margin-bottom: 4%;">
+        </div>
+      </form>
+      <div class="container">
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+          <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{message}} 
+          </div>
+          {% else %}
+          <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{message}}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="blog-box" style="border-color: gold;">
+        <h3 style="background-color: gold;">بسته طلایی</h3>
+        <h5>قیمت : 200 هزار تومن</h5>
+        <p>زمان = 6 ماه</p>
+        <p>هر 1000 بازدید 100 هزار تومن اعتبار</p>
+        <a href="{% url "main:super_account" id="G"%}"><button class="btn btn-primary">خرید</button></a>
+      </div>
+      <div class="blog-box" style="border-color: aqua;">
+        <h3 style="background-color: aqua;">بسته الماسی</h3>
+        <h5>قیمت : 500 هزار تومن</h5>
+        <p>زمان = یک سال</p>
+        <p>هر 1000 بازدید 200 هزار تومن اعتبار</p>
+        <a href="{% url "main:super_account" id="D"%}"><button class="btn btn-primary">خرید</button></a>
+      </div>
+      <div class="blog-box" style="border-color: silver;">
+        <h3 style="background-color: silver;">بسته نقره ای</h3>
+        <h5>قیمت : 100 هزار تومن</h5>
+        <p>زمان = یک ماه</p>
+        <p>هر 1000 بازدید 50 هزار تومن اعتبار</p>
+        <a href="{% url "main:super_account" id="S"%}"><button class="btn btn-primary">خرید</button></a>
+      </div>
+      {% if object.best_in_week %}
+      <div class="blog-box">
+        <h3>بهترین مقالات این هفته</h3>
+          {% for article in object.best_in_week %}
+            <a href="{% url "blog:detail" article.slug %}"><p>{{ article.title }}</p></a>
+          {% endfor %}
+      </div>
+      {% endif %}
+      {% if object.best_in_month %}
+      <div class="blog-box">
+        <h3>بهترین مقالات این ماه</h3>
+        {% for article in object.best_in_month %}
+            <a href="{% url "blog:detail" article.slug %}"><p>{{ article.title }}</p></a>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if object.best_in_year %}
+      <div class="blog-box">
+        <h3>بهترین مقالات امسال</h3>
+        {% for article in object.best_in_year %}
+        <a href="{% url "blog:detail" article.slug %}"><p>{{ article.title }}</p></a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% if object.follower_blog %}
+  <div class="content" style="margin-top: -2%;">
+    <div class="container mt-3">
+      <br>
+      <table class="table table-bordered">
+        <legend>مقالات کاربران دنبال شده توسط شما</legend>
+        <thead>
+          <tr>
+            <th>نام مقاله</th>
+            <th>تاریخ انتشار</th>
+            <th>نویسنده</th>
+          </tr>
+        </thead>
+        <tbody id="myTable">
+          {% for article in object.follower_blog %}
+          <tr>
+            <td><a href="{% url "blog:detail" article.slug %}">{{article.title}}</a></td>
+            <td>{{article.jpublish}}</td>
+            <td><a href="{% url "member:user_profile" article.author.id %}">{{article.author.user_name}}</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="content">
+    <div class="container mt-3">
+      <br>
+      <table class="table table-bordered">
+        <legend>مقالات شما</legend>
+        <thead>
+          <tr>
+            <th>نام مقاله</th>
+            <th>تاریخ انتشار</th>
+            <th>وضعیت</th>
+          </tr>
+        </thead>
+        <tbody id="myTable">
+          {% for article in object.blogs %}
+          <tr>
+            <td><a href="{% url "blog:detail" article.slug %}">{{article.title}}</a></td>
+            <td>{{article.jpublish}}</td>
+            {% if not article.is_published  %}
+              <td style="color:red;">منتشر نشده</td>
+            {% else %}
+              <td style="color:green;">منتشر شده</td>
+            {% endif %}
+            {% empty %}
+            <td colspan="4" ><p>شما مقاله ای ننوشتید برای نوشتن اولین مقاله خود <a href="{% url "blog:addblog" %}" style="color:blue;">کلیک</a> کنید</p></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+  {% if request.resolver_match.url_name == "category" %}
+  <div class="content">
+    <div class="container mt-3">
+      <h2>{{category.title}}</h2>
+      <form action="" method="post">
+        {% csrf_token %}
+        <input name="word" class="form-control" id="myInput" type="text" placeholder="جستجو..">
+      </form>
+      <br>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>نام مقاله</th>
+            <th>تاریخ انتشار</th>
+            <th>نویسنده</th>
+          </tr>
+        </thead>
+        <tbody id="myTable">
+          {% for blog in blogs %}
+          <tr>
+            <td><a href="{% url "blog:detail" blog.slug %}">{{blog.title}}</a></td>
+            <td>{{blog.jpublish}}</td>
+            <td>{{blog.author.user_name}}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3">مقاله ای برای این دسته بندی وجود ندارد</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="pagination">
+        {% if blogs.has_previous %}
+            <a href="{% url 'main:category' category.id %}?page={{blogs.previous_page_number}}">&laquo;</a>
+        {% endif %}
+        {% for i in blogs.paginator.page_range %}
+            {% if blogs.paginator.page_range|length == 1 %}
+              <p></p>
+            {% elif blogs.number == i %}
+                <a class="active" href="">{{i}}</a>
+            {% else %}
+                <a href="?page={{ i }}">{{i}}</a>
+            {% endif %}         
+        {% endfor %}
+        {% if blogs.has_next %}
+            <a href="{% url 'main:category' category.id %}?page={{blogs.next_page_number}}">&raquo;</a>
+        {% endif %}
+    </div>
+    
+      
+
+    </div>
+  </div>
+  {% endif %}
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</html>

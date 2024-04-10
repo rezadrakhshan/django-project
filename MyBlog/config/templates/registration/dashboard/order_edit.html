@@ -1,0 +1,105 @@
+{% extends "registration/base.html" %}
+{% block title %}{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+      <li class="breadcrumb-item active">ویرایش سفارش</li>
+      <li class="breadcrumb-item active">سفارشات</li>
+      <li class="breadcrumb-item active">داشبورد</li>
+      <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+    </ol>
+</div>
+{% endblock breadcrumb %}
+{% block main %}
+{% for message in messages %}
+{% if message.tags == "success" %}
+<div>
+    <div class="card bg-gradient-success">
+      <div class="card-header">
+          <div class="card-tools" style="float: left;">
+            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+            </button>
+          </div>
+        <h3 class="card-title" style="float: right;">تبریک</h3>
+
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{message}}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  {% else %}
+  <div>
+      <div class="card bg-gradient-danger">
+        <div class="card-header">
+            <div class="card-tools" style="float: left;">
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+              </button>
+            </div>
+          <h3 class="card-title" style="float: right;">اخطار</h3>
+  
+          <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          {{message}}
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+
+{% endif %}
+{% endfor %}
+<div class="card card-primary">
+    <div class="card-header">
+      <h3 class="card-title" style="float:right;">{{order.product.title}} توسط {{order.user.user_name}}</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+    <form role="form" method="post">
+        {% csrf_token %}
+      <div class="card-body">
+        <div class="form-group">
+            <label>وضعیت</label>
+            <select class="custom-select" name="status">
+                {% if order.status == "P" %}
+                <option value="P" selected>در حال بررسی</option>
+                <option value="PR">در حال آماده سازی</option>
+                <option value="S">ارسال شده</option>
+                <option value="D">تحویل داده شده</option>
+                {% elif order.status == "PR" %}
+                <option value="P">در حال بررسی</option>
+                <option value="PR" selected>در حال آماده سازی</option>
+                <option value="S">ارسال شده</option>
+                <option value="D">تحویل داده شده</option>
+                {% elif order.status == "S" %}
+                <option value="P">در حال بررسی</option>
+                <option value="PR">در حال آماده سازی</option>
+                <option value="S" selected>ارسال شده</option>
+                <option value="D">تحویل داده شده</option>
+                {% else %}
+                <option value="P">در حال بررسی</option>
+                <option value="PR">در حال آماده سازی</option>
+                <option value="S">ارسال شده</option>
+                <option value="D" selected>تحویل داده شده</option>
+                {% endif %}
+            </select>
+          </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">شاخصه</label>
+          <input name="slug" type="text" class="form-control" id="exampleInputPassword1" value="{{order.slug}}">
+        </div>
+      </div>
+      <!-- /.card-body -->
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">ثبت</button>
+      </div>
+    </form>
+  </div>
+{% endblock main %}

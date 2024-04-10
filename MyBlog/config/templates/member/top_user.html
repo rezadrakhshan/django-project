@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+  <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+  <title>کد بیان</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static "css/style.css" %}">
+</head>
+{% include "include/header.html" %}
+<body>
+  <div class="content" style="margin-top: -2%;">
+    <div class="container mt-3">
+      <br>
+      <table class="table table-bordered">
+        <legend>کاربران برتر کدبیان</legend>
+        <thead>
+          <tr>
+            <th>نام کاربری</th>
+            <th>ایمیل</th>
+            <th>تعداد بازدید ها</th>
+          </tr>
+        </thead>
+        <tbody id="myTable">
+          {% for user in users %}
+          <tr>
+            <td><a href="{% url "member:user_profile" user.profile.id %}">{{user.profile.user_name}}</a></td>
+            <td>{{user.email}}</td>
+            <td>{{user.hits}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>

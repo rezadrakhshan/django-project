@@ -1,0 +1,113 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+  <title>کد بیان</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static "css/style.css" %}">
+</head>
+<style>
+
+.ribbon {
+  width: 60px;
+  font-size: 14px;
+  padding: 4px;
+  position: absolute;
+  text-align: center;
+  border-radius: 25px;
+  transform: rotate(20deg);
+  background-color: #ff9800;
+  color: white;
+}
+</style>
+{% include "include/header.html" %}
+<body>
+  <div class="content">
+    {% for message in messages %}
+          {% if message.tags == 'error' %}
+          <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{message}} 
+          </div>
+          {% else %}
+          <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{message}}
+          </div>
+          {% endif %}
+        {% endfor %}
+    <div class="best-blogs">
+      {% for product in products %}
+      <div class="blog-box">
+        {% if product.tag == "H" %}
+          <span class="ribbon" style="background-color: red;">فروش داغ</span>
+        {% elif product.tag == "D" %}
+        <span class="ribbon">تخفیف ویژه</span>
+        {% elif product.tag == "N" %}
+        <span class="ribbon" style="background-color: chocolate;">جدید</span>
+        {% endif %}
+        
+        <img src="{{product.image.url}}" style="max-width: 300px;max-height: 150px;" alt="">
+        <h4 style="margin-top: 2%;">{{product.title}}</h4>
+        <h6>قیمت:{{product.price_with_discount|floatformat:1|intcomma }}تومن</h6>
+        <button class="btn btn-success" data-toggle="modal" data-target="#myModal{{product.id}}">خرید</button>
+          <!-- The Modal -->
+      </div>
+      <div class="modal" id="myModal{{product.id}}" style="text-align: center;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          
+            <!-- Modal Header -->
+            <div class="modal-header" style="margin: auto;">
+              <h4 class="modal-title">{{product.title}}</h4>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+              {{product.description}}
+            </div>
+            <div class="modal-body">
+              نویسنده:{{product.author}}
+            </div>
+            <div class="modal-body">
+              تعداد صفحه:{{product.page_count}}
+            </div>
+            <div class="modal-body">
+               تاریخ انتشار:{{product.publication_date}}
+            </div>
+            <div class="modal-body">
+              نوع جلد:{{product.book_cover}}
+            </div>
+            <div class="modal-body">
+               قیمت بدون تخفیف:{{product.price|floatformat:1|intcomma }}تومن
+            </div>
+            <div class="modal-body">
+               قیمت با تخفیف:{{product.price_with_discount|floatformat:1|intcomma }} تومن
+            </div>
+            
+            <!-- Modal footer -->
+            <div style="display: flex;margin: auto;">
+              <div class="modal-footer">
+                <a href="{% url "shop:add_procurement" product.id %}"><button class="btn btn-success">خرید</button></a>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+
+<div class="sidebar">
+  {% if request.resolver_match.url_name == "home" %}
+  <a class="active" href="{% url "main:home" %}">صفحه اصلی</a>
+  {% else %}
+  <a href="{% url "main:home" %}">صفحه اصلی</a>
+  {% endif %}
+  {% if request.resolver_match.url_name == "contact" %}
+  <a class="active" href="{% url "main:contact" %}">ارتباط با ما</a>
+  {% else %}
+  <a href="{% url "main:contact" %}">ارتباط با ما</a>
+  {% endif %}
+  {% if request.user.is_authenticated %}
+  <a href="{% url "member:profile" %}">پروفایل</a>
+  {% else %}
+  <a href="{% url "member:login" %}">ورود</a>
+  {% endif %}
+  {% if request.resolver_match.url_name == "top_user" %}
+  <a href="{% url "member:top_user" %}" class="active">کاربران برتر</a>
+  {% else %}
+  <a href="{% url "member:top_user" %}">کاربران برتر</a>
+  {% endif %}
+  <div class="dropdown">
+    <a href="">فروشگاه</a>
+    <div class="dropdown-content">
+      <a href="{% url "shop:products" %}">لیست محصولات</a>
+      <a href="{% url "shop:cart" %}">سبد خرید شما<span class="badge badge-success">{{order}}</span></a>
+    </div>
+  </div>
+  <div class="dropdown">
+    <a href="">دسته بندی</a>
+    <div class="dropdown-content">
+      {% for category in categories %}
+      <a href="{% url "main:category" category.id %}">{{category.title}}</a>
+      {% endfor %}
+    </div>
+  </div>
+  <a href="#about">درباره ما</a>
+</div>
+
+</body>
+</html>

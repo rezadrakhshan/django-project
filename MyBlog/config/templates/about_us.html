@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>درباره ما</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: right;
+    }
+    .footer {
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">وبلاگ</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">صفحه اصلی</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#">درباره ما <span class="sr-only">(فعلی)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="contact_us.html">تماس با ما</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">درباره ما</h1>
+    <p>وبلاگ ما یک منبع اطلاعاتی برای مطالعه، یادگیری و به اشتراک گذاری دانستنی‌های مفید است. ما متعهد به ارائه مطالب با کیفیت و معتبر در زمینه‌های مختلف هستیم.</p>
+    <p>با ما همراه باشید و از محتواهای متنوع و جذاب وبلاگ ما بهره‌مند شوید.</p>
+  </div>
+
+  <footer class="bg-dark text-light text-center py-3 footer" dir="rtl">
+    <p>&copy; 2024 وبلاگ شما | تماس: info@yourwebsite.com</p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

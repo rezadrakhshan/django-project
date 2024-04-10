@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static "img/web.ico" %}">
+    <title>خوش آمدید به کدبیان</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+            background-color: #ecf9ec;
+            /* Lighter green background */
+            color: #333;
+            background-image: url("{% static "img/retrosupply-jLwVAUtLOAQ-unsplash.jpg" %}");
+            background-size: cover;
+        }
+
+
+        .container {
+            padding: 2rem 0;
+        }
+
+        .welcome-section,
+        .about-section,
+        .contact-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section,
+        .about-section {
+            margin-bottom: 0%;
+            height: 250px;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            /* Matching green shade for buttons */
+            border: none;
+        }
+
+        .form-control,
+        .btn-primary {
+            border-radius: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: #388E3C;
+            /* Darker green on hover */
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-section {
+            background-color: #ffffff;
+            /* Set the stats section background to white */
+            padding: 20px;
+            /* Optional: Added for some padding around the content */
+            margin-bottom: 20px;
+            border-radius: 20px;
+            /* Optional: Added for spacing between sections */
+        }
+
+        /* Apply the animation to the sections with a slower speed */
+        .welcome-section,
+        .about-section,
+        .contact-section,
+        .stats-section  {
+            animation: slideInUp 2s ease-out;
+            /* Increased duration to 2s for a slower speed */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <!-- Welcome Section -->
+            <div class="col-md-6">
+                <div class="welcome-section">
+                    <h1 class="mb-3">به کد بیان خوش آمدید</h1>
+                    <p>برای استفاده از وبسایت ابتدا وارد شوید</p>
+                    <a href="{% url "login" %}" class="btn btn-primary">ورود</a>
+                </div>
+            </div>
+            <!-- About Section -->
+            <div class="col-md-6">
+                <div class="about-section">
+                    <h2>درباره کدبیان</h2>
+                    <p> کدبیان مجموعه ای است برای نویسندگان و برنامه نویسانی که میخواهند علم خود را در قالب مقاله با
+                        دیگران به اشتراک بگذارند کد بیان به شما این امکان را میدهد در کنار فعالیت خود از این فعالیت
+                        درامدی نیز داشته باشید مجموعه کد بیان همواره تلاش میکند تا امکاناتی مفید در اختیار نویسندگان خود
+                        قرار دهد </p>
+                </div>
+            </div>
+        </div>
+        <!-- Contact Section remains unchanged and will take full width -->
+    </div>
+    <!-- Stats Section -->
+    <div class="container mt-4">
+        <div class="row text-center">
+            <!-- User Count -->
+            <div class="col-md-4">
+                <div class="stats-section">
+                    <h3>تعداد کاربران</h3>
+                    <p id="userCount">{{user}}</p> <!-- Dynamically update this count as needed -->
+                </div>
+            </div>
+            <!-- Blog Count -->
+            <div class="col-md-4">
+                <div class="stats-section">
+                    <h3>تعداد مقالات</h3>
+                    <p id="blogCount">{{blog}}</p> <!-- Dynamically update this count as needed -->
+                </div>
+            </div>
+            <!-- Product Count -->
+            <div class="col-md-4">
+                <div class="stats-section">
+                    <h3>تعداد محصولات</h3>
+                    <p id="productCount">{{product}}</p> <!-- Dynamically update this count as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container contact-section">
+        <h2>تماس با ما</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="name" class="form-label">نام</label>
+                <input name="name" type="text" class="form-control" id="name">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">ایمیل</label>
+                <input name="email" type="email" class="form-control" id="email">
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">پیام</label>
+                <textarea name="message" class="form-control" id="message" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">ارسال</button>
+        </form>
+    </div>
+</body>
+
+</html>

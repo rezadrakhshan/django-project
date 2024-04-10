@@ -1,0 +1,124 @@
+{% extends "registration/base.html" %}
+{% block title %}دسته بندی ها{% endblock title %}
+{% block breadcrumb %}
+<div class="col-sm-6">
+  <ol class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item active">دسته بندی ها</li>
+    <li class="breadcrumb-item active">مقالات</li>
+    <li class="breadcrumb-item active">داشبورد</li>
+    <li class="breadcrumb-item"><a href="{% url "main:home" %}">کد بیان</a></li>
+  </ol>
+</div>
+{% endblock breadcrumb %}
+{% block main %}
+{% for message in messages %}
+{% if message.tags == "success" %}
+<div>
+    <div class="card bg-gradient-success">
+      <div class="card-header">
+          <div class="card-tools" style="float: left;">
+            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+            </button>
+          </div>
+        <h3 class="card-title" style="float: right;">تبریک</h3>
+
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{message}}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+  {% else %}
+  <div>
+      <div class="card bg-gradient-danger">
+        <div class="card-header">
+            <div class="card-tools" style="float: left;">
+              <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+              </button>
+            </div>
+          <h3 class="card-title" style="float: right;">اخطار</h3>
+  
+          <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          {{message}}
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+
+{% endif %}
+{% endfor %}
+<div class="card card-info">
+    <div class="card-body p-0">
+      <table class="table">
+        <thead>
+          <tr>
+            <div class="input-group mb-3">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input name="title" type="text" class="form-control">
+                    <div class="input-group-prepend">
+                      <button type="submit" class="btn btn-primary">افزودن</button>
+                    </div>
+                </form>
+                <!-- /btn-group -->
+            </div>
+          </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+          <tr>
+            <td>{{category.title}}</td>
+            <td class="text-right py-0 align-middle">
+              <div class="btn-group btn-group-sm">
+                <a href="{% url "dashboard:category_remove" category.id %}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="col-sm-12 col-md-7">
+          <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+            <ul class="pagination">
+              {% if categories.has_previous %}
+              <li class="paginate_button page-item previous" id="example2_previous"><a href="?page={{ categories.previous_page_number }}"
+                  aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+              {% else %}
+              <li class="paginate_button page-item previous disabled" id="example2_previous"><a href=""
+                aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a></li>
+              {% endif %}
+              {% for i in categories.paginator.page_range %}
+              {% if categories.paginator.page_range|length == 1 %}
+              {% elif categories.number == i %}
+              <li class="paginate_button page-item active"><a href="" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                  class="page-link">{{i}}</a></li>
+              {% else %}
+              <li class="paginate_button page-item"><a href="?page={{ i }}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                class="page-link">{{i}}</a></li>
+              {% endif %}
+              {% endfor %}
+              {% if categories.has_next %}
+              <li class="paginate_button page-item next" id="example2_next"><a href="?page={{ categories.next_page_number }}" aria-controls="example2"
+                  data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+              {% else %}
+              <li class="paginate_button page-item next disabled" id="example2_next"><a href="" aria-controls="example2"
+                data-dt-idx="7" tabindex="0" class="page-link">بعدی</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+{% endblock main %}
