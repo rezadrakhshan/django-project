@@ -176,6 +176,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'videostream476@gmail.com'  # آدرس ایمیل Gmail خود را وارد کنید
-EMAIL_HOST_PASSWORD = 'idniqkpykrndctml'  # رمز عبور ایمیل Gmail خود را وارد کنید
+EMAIL_HOST_PASSWORD = ''  # رمز عبور ایمیل Gmail خود را وارد کنید
 
 
