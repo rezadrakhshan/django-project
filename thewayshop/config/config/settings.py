@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "main",
+    "member",
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +87,11 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.github.GithubOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -127,3 +137,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR , "media")
+
+LOGIN_URL = "member:login"
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'member:login'
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("google_key")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("google_secret")
+SOCIAL_AUTH_GITHUB_KEY = os.getenv("github_client")
+SOCIAL_AUTH_GITHUB_SECRET = os.getenv("github_secret")

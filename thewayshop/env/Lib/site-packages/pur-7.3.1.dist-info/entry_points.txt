@@ -1,0 +1,2 @@
+[console_scripts]
+pur = pur.__init__:pur
