@@ -26,3 +26,11 @@ class Team(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class Service(models.Model):
+    title = models.CharField(max_length=100)
+    decription = models.TextField()
+
+    def __str__(self) -> str:
+        return self.title
