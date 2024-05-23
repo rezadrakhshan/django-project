@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.index',
             ],
         },
     },
@@ -86,6 +87,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth2',
@@ -135,14 +137,19 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# TODO: media settings
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR , "media")
 
+
+#TODO: authentication redirect settings
 LOGIN_URL = "member:login"
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = 'member:login'
 
 
+# TODO: social authenticate setitngs
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("google_key")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("google_secret")
 SOCIAL_AUTH_GITHUB_KEY = os.getenv("github_client")
