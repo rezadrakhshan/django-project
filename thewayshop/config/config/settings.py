@@ -138,19 +138,27 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# TODO: media settings
+# media settings
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR , "media")
 
 
-#TODO: authentication redirect settings
+# authentication redirect settings
 LOGIN_URL = "member:login"
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = 'member:login'
 
 
-# TODO: social authenticate setitngs
+# social authenticate setitngs
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("google_key")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("google_secret")
 SOCIAL_AUTH_GITHUB_KEY = os.getenv("github_client")
 SOCIAL_AUTH_GITHUB_SECRET = os.getenv("github_secret")
+
+# email backend settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("email")
+EMAIL_HOST_PASSWORD = os.getenv("password")

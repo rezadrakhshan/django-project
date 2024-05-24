@@ -151,7 +151,12 @@
                         {% else %}
                         <li class="nav-item"><a class="nav-link" href="{% url "main:service" %}">Our Service</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact Us</a></li>
+                        {% if request.resolver_match.url_name == "contact" %}
+                        <li class="nav-item active"><a class="nav-link" href="{% url "main:contact" %}">Contact Us</a></li>
+                        {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url "main:contact" %}">Contact Us</a></li>
+                        {% endif %}
+
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->
