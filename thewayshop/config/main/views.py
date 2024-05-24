@@ -8,6 +8,7 @@ from django.utils.html import strip_tags
 import time
 
 
+
 # home page function
 @login_required
 def home(request):

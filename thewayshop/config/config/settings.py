@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "main",
     "member",
+    "shop",
     'social_django',
 ]
 
