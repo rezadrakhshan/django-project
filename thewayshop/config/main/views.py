@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Team, Service
+from shop.models import Product
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -12,7 +13,11 @@ import time
 # home page function
 @login_required
 def home(request):
-    return render(request, "index.html")
+    product = Product.objects.filter(avaible=True).order_by("-price")[:8]
+    context = {
+        "products":product,
+    }
+    return render(request, "index.html",context)
 
 
 # about us page function
