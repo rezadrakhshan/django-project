@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 
@@ -27,6 +28,7 @@ class Product(models.Model):
     offer = models.IntegerField()
     count = models.IntegerField()
     picture = models.ManyToManyField(ProductImage, related_name="pic")
+    size = ArrayField(models.CharField(max_length=20),blank=True,default=list,size=8)
     description = models.TextField()
     tag = models.CharField(max_length=1,choices=TAG)
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
