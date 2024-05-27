@@ -14,3 +14,5 @@ def detail(request,id):
         return render(request,"shop-detail.html",context)
     else:
         return redirect("main:home")
+
+#5432
