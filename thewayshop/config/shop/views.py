@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product, WishList
+from .models import Product, WishList,Category
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
@@ -50,3 +50,14 @@ def wishlist(request):
         "items":item
     }
     return render(request,"wishlist.html",context)
+
+@login_required
+def category(request,slug):
+    cat = Category.objects.get(slug=slug)
+    item = Product.objects.filter(category=cat)
+    context = {
+        "category":cat,
+        "items":item,
+    }
+    return render(request,"shop.html",context)
+    

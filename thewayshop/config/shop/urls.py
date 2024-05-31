@@ -7,4 +7,5 @@ urlpatterns = [
     path("add-wish-item-<product>",wishitem,name="wish"),
     path("remove-whish-item-<pk>",removewish,name="removewish"),
     path("wish-list",wishlist,name="wishlist"),
+    path("category-<slug>",category,name="category"),
 ]

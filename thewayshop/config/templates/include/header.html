@@ -90,7 +90,7 @@
                                             <div class="content">
                                                 <ul class="menu-col">
                                                     {% for subcategory in i.children.all %}
-                                                    <li><a href="shop.html">{{subcategory.title}}</a></li>
+                                                    <li><a href="{% url "shop:category" subcategory.slug %}">{{subcategory.title}}</a></li>
                                                     {% endfor %}
                                                 </ul>
                                             </div>
