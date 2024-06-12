@@ -52,12 +52,33 @@ def wishlist(request):
     return render(request,"wishlist.html",context)
 
 @login_required
-def category(request,slug):
+def category(request, slug):
     cat = Category.objects.get(slug=slug)
     item = Product.objects.filter(category=cat)
+    categories = Category.objects.filter(parent__isnull=True)
+    category_product_count = {}
+
+    def get_product_count(category):
+        count = Product.objects.filter(category=category).count()
+        for child in category.children.all():
+            count += get_product_count(child)
+        return count
+
+    def populate_product_count(category):
+        category_product_count[category.id] = get_product_count(category)
+        for child in category.children.all():
+            populate_product_count(child)
+
+    for category in categories:
+        populate_product_count(category)
+
     context = {
-        "category":cat,
-        "items":item,
+        "category": cat,
+        "items": item,
+        'categories': categories,
+        'category_product_count': category_product_count,
     }
-    return render(request,"shop.html",context)
+    return render(request, "shop.html", context)
+
+
     
