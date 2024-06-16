@@ -8,4 +8,5 @@ urlpatterns = [
     path("remove-whish-item-<pk>",removewish,name="removewish"),
     path("wish-list",wishlist,name="wishlist"),
     path("category-<slug>",category,name="category"),
+    path("filter-price",filter_price,name="filter_price"),
 ]
