@@ -6,6 +6,8 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.core.mail import EmailMessage
+from django.conf import settings
 import time
 
 
@@ -61,15 +63,12 @@ def contact(request):
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         html_content2 = render_to_string("email/user_email.html")
-        txt_content2 = strip_tags(html_content2)
-        msg2 = EmailMultiAlternatives(
-            "TheWayShop",
-            txt_content2,
-            "theweblogfromiran@gmail.com",
-            [email],
-        )
-        msg2.attach_alternative(html_content2, "text/html")
-        msg2.send()
-
+        email = EmailMessage(subject, html_content2, "theweblogfromiran@gmail.com", [email])
+        email.content_subtype = "html"
+        email_sent = email.send()
+        if email_sent:
+            print("User email sent successfully.")
+        else:
+            print("Failed to send user email.")
         return redirect("main:contact")
     return render(request, "contact-us.html")
