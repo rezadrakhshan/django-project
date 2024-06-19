@@ -90,42 +90,43 @@
                     <div class="single-product-details">
                         <h2>{{item.title}}</h2>
                         <h5> <del>$ {{item.price}}</del> ${{item.calcute_price}}</h5>
-                        <p class="available-stock"><span> More than {{item.count}} available / <a href="#">8 sold </a></span>
+                        <p class="available-stock"><span> More than {{item.count}} available / <a>8 sold </a></span>
                             <p>
                                 <h4>Short Description:</h4>
                                 <p>{{item.description}}</p>
-                                <ul>
-                                    <li>
-                                        <div class="form-group size-st">
-                                            <label class="size-label">Size</label>
-                                            <select id="basic" class="selectpicker show-tick form-control">
-                                                {% for size in item.size %}
-                                                <option value="{{size}}">{{size}}</option>
-                                                {% endfor %}
-								</select>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-group quantity-box">
-                                            <label class="control-label">Quantity</label>
-                                            <input class="form-control" value="0" min="0" max="20" type="number">
-                                        </div>
-                                    </li>
-                                </ul>
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <ul>
+                                        <li>
+                                            <div class="form-group size-st">
+                                                <label class="size-label">Size</label>
+                                                <select name="size" id="basic" class="selectpicker show-tick form-control">
+                                                    {% for size in item.size %}
+                                                    <option value="{{size}}">{{size}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="form-group quantity-box">
+                                                <label class="control-label">Quantity</label>
+                                                <input name="count" class="form-control" value="0" min="0" max="20" type="number">
+                                            </div>
+                                        </li>
+                                    </ul>
 
-                                <div class="price-box-bar">
-                                    <div class="cart-and-bay-btn">
-                                        <a class="btn hvr-hover" data-fancybox-close="" href="#">Buy New</a>
-                                        <a class="btn hvr-hover" data-fancybox-close="" href="#">Add to cart</a>
+                                    <div class="price-box-bar">
+                                        <div class="cart-and-bay-btn">
+                                            <button class="btn hvr-hover" type="submit" style="color:white;">Add to cart</button>
+                                        </div>
                                     </div>
-                                </div>
-
+                            </form>
                                 <div class="add-to-btn">
                                     <div class="add-comp">
                                         <a class="btn hvr-hover" href="{% url "shop:wish" item.id %}"><i class="fas fa-heart"></i> Add to wishlist</a>
-                                        <a class="btn hvr-hover" href="#"><i class="fas fa-sync-alt"></i> Add to Compare</a>
                                     </div>
                                 </div>
+
                     </div>
                 </div>
             </div>

@@ -54,3 +54,14 @@ class WishList(models.Model):
 
     def __str__(self) -> str:
         return f"{self.product.title} for {self.user.username}"
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    size = models.CharField(max_length=10)
+    count = models.IntegerField()
+    slug = models.UUIDField(primary_key=True,default=uuid.uuid4)
+
+    def __str__(self) -> str:
+        return f"{self.product.title} for {self.user.username}"
