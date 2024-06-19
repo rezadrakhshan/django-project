@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="{% static "css/responsive.css" %}">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static "css/custom.css" %}">
+    <link rel="stylesheet" href="{% static "css/error.css" %}">
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -37,11 +38,16 @@
 </head>
 
 <body>
-
     {% include "include/header.html" %}
-
+    
     <!-- Start All Title Box -->
     <div class="all-title-box">
+        {% for message in messages %}
+        <div id="errorBox" class="error-box">
+            <span class="error-message">{{message}}</span>
+            <button class="close-btn" onclick="closeErrorBox()">×</button>
+        </div>
+        {% endfor %}
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -94,7 +100,7 @@
                             <p>
                                 <h4>Short Description:</h4>
                                 <p>{{item.description}}</p>
-                                <form action="" method="post">
+                                <form action="{% url "shop:add_cart" %}" method="post">
                                     {% csrf_token %}
                                     <ul>
                                         <li>
@@ -111,6 +117,7 @@
                                             <div class="form-group quantity-box">
                                                 <label class="control-label">Quantity</label>
                                                 <input name="count" class="form-control" value="0" min="0" max="20" type="number">
+                                                <input name="product" type="hidden" value="{{item.id}}">
                                             </div>
                                         </li>
                                     </ul>
@@ -187,6 +194,7 @@
     <script src="{% static "js/form-validator.min.js" %}"></script>
     <script src="{% static "js/contact-form-script.js" %}"></script>
     <script src="{% static "js/custom.js" %}"></script>
+    <script src="{% static "js/error.js" %}"></script>
 </body>
 
 </html>

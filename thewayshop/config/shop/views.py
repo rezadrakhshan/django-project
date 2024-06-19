@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Product, WishList, Category
+from .models import Product, WishList, Category, Cart
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -150,3 +151,20 @@ def search(request):
         return render(request, "shop.html", context)
     else:
         return redirect("/")
+
+
+@login_required
+def add_cart(request):
+    if request.method == "POST":
+        size = request.POST.get("size")
+        count = request.POST.get("count")
+        product = request.POST.get("product")
+        if int(count) == 0 :
+            messages.error(request,"pleas add correct value")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+        else:
+            item = Product.objects.get(id=product)
+            new_order = Cart.objects.create(
+                user=request.user, product=item, size=size, count=count
+            )
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))

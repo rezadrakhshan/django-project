@@ -73,11 +73,11 @@
                 
                 <div class="col-lg-8 col-sm-12">
                     <div class="contact-form-right">
-                        {% for i in messages %}
-                        <div class="alert">
-                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                            {{i}}
-                          </div>
+                        {% for message in messages %}
+                        <div id="errorBox" class="error-box">
+                            <span class="error-message">{{message}}</span>
+                            <button class="close-btn" onclick="closeErrorBox()">×</button>
+                        </div>
                         {% endfor %}
                         <h2>Register</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed odio justo, ultrices ac nisl sed, lobortis porta elit. Fusce in metus ac ex venenatis ultricies at cursus mauris.</p>
@@ -167,6 +167,7 @@
     <script src="{% static "js/form-validator.min.js" %}"></script>
     <script src="{% static "js/contact-form-script.js" %}"></script>
     <script src="{% static "js/custom.js" %}"></script>
+    <script src="{% static "js/error.js" %}"></script>
     <script>
         document.addEventListener('contextmenu', event => {
         event.preventDefault();
