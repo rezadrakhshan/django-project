@@ -2,13 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Team, Service
 from shop.models import Product
-from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMessage
-from django.conf import settings
-import time
 
 
 
@@ -42,7 +39,6 @@ def service(request):
     return render(request, "service.html", context)
 
 
-#TODO: this code have a bug 
 @login_required
 def contact(request):
     if request.method == "POST":

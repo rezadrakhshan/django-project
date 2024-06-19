@@ -88,7 +88,9 @@ def filter_price(request):
         start_price = int(parts[0].strip("$"))
         end_price = int(parts[1].strip("$"))
         cat = Category.objects.get(slug=category)
-        item = Product.objects.filter(price__gte=start_price, price__lte=end_price,category=cat)
+        item = Product.objects.filter(
+            price__gte=start_price, price__lte=end_price, category=cat
+        )
         categories = Category.objects.filter(parent__isnull=True)
         category_product_count = {}
 
@@ -112,4 +114,39 @@ def filter_price(request):
             "category_product_count": category_product_count,
         }
         return render(request, "shop.html", context)
+    else:
+        return redirect("/")
 
+
+@login_required
+def search(request):
+    if request.method == "GET":
+        word = request.GET.get("search")
+        category = request.GET.get("type")
+        cat = Category.objects.get(slug=category)
+        item = Product.objects.filter(title__icontains=word, avaible=True, category=cat)
+        categories = Category.objects.filter(parent__isnull=True)
+        category_product_count = {}
+
+        def get_product_count(category):
+            count = Product.objects.filter(category=category).count()
+            for child in category.children.all():
+                count += get_product_count(child)
+            return count
+
+        def populate_product_count(category):
+            category_product_count[category.id] = get_product_count(category)
+            for child in category.children.all():
+                populate_product_count(child)
+
+        for category in categories:
+            populate_product_count(category)
+        context = {
+            "category": cat,
+            "items": item,
+            "categories": categories,
+            "category_product_count": category_product_count,
+        }
+        return render(request, "shop.html", context)
+    else:
+        return redirect("/")
