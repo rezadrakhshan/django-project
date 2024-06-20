@@ -109,9 +109,9 @@
                         </li>
                         {% endif %}
                         <li class="dropdown">
-                            <a href="#" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">SHOP</a>
+                            <a class="nav-link dropdown-toggle arrow" data-toggle="dropdown">SHOP</a>
                             <ul class="dropdown-menu">
-                                <li><a href="cart.html">Cart</a></li>
+                                <li><a href="{% url "shop:cart" %}">Cart</a></li>
                                 <li><a href="checkout.html">Checkout</a></li>
                                 <li><a href="my-account.html">My Account</a></li>
                                 <li><a href="{% url "shop:wishlist" %}">Wishlist</a></li>
@@ -143,7 +143,7 @@
                           </svg></a></li>
                         <li class="side-menu"><a href="#">
 						<i class="fa fa-shopping-bag"></i>
-                            <span class="badge">3</span>
+                            <span class="badge">{{orders.count}}</span>
 					</a></li>
                     </ul>
                 </div>
@@ -154,24 +154,16 @@
                 <a href="#" class="close-side"><i class="fa fa-times"></i></a>
                 <li class="cart-box">
                     <ul class="cart-list">
+                        {% for i in orders %}
                         <li>
-                            <a href="#" class="photo"><img src="{% static "images/img-pro-01.jpg" %}" class="cart-thumb" alt="" /></a>
-                            <h6><a href="#">Delica omtantur </a></h6>
-                            <p>1x - <span class="price">$80.00</span></p>
+                            <a class="photo"><img src="{{i.product.picture.first.image.url}}" class="cart-thumb" alt="" /></a>
+                            <h6><a href="{% url "shop:detail" i.product.id %}">{{i.product.title}}</a></h6>
+                            <p>{{i.count}}x - <span class="price">${{i.product.calcute_price}}</span></p>
                         </li>
-                        <li>
-                            <a href="#" class="photo"><img src="{% static "images/img-pro-02.jpg" %}" class="cart-thumb" alt="" /></a>
-                            <h6><a href="#">Omnes ocurreret</a></h6>
-                            <p>1x - <span class="price">$60.00</span></p>
-                        </li>
-                        <li>
-                            <a href="#" class="photo"><img src="{% static "images/img-pro-03.jpg" %}" class="cart-thumb" alt="" /></a>
-                            <h6><a href="#">Agam facilisis</a></h6>
-                            <p>1x - <span class="price">$40.00</span></p>
-                        </li>
+                        {% endfor %}
                         <li class="total">
                             <a href="#" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
-                            <span class="float-right"><strong>Total</strong>: $180.00</span>
+                            <span class="float-right"><strong>Total</strong>: ${{total}}</span>
                         </li>
                     </ul>
                 </li>

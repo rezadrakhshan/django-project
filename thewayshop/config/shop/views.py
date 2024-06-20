@@ -167,4 +167,13 @@ def add_cart(request):
             new_order = Cart.objects.create(
                 user=request.user, product=item, size=size, count=count
             )
+            messages.success(request,"Your order has been registered")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+@login_required
+def cart(request):
+    item = Cart.objects.filter(user=request.user)
+    context = {
+        "items":item
+    }
+    return render(request,"cart.html",context)

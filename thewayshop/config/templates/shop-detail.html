@@ -43,10 +43,17 @@
     <!-- Start All Title Box -->
     <div class="all-title-box">
         {% for message in messages %}
+        {% if message.tag == "error" %}
         <div id="errorBox" class="error-box">
             <span class="error-message">{{message}}</span>
             <button class="close-btn" onclick="closeErrorBox()">×</button>
         </div>
+        {% else %}
+        <div id="errorBox" class="error-box" style="background-color: rgb(74, 255, 74);border:none">
+            <span class="error-message">{{message}}</span>
+            <button class="close-btn" onclick="closeErrorBox()">×</button>
+        </div>
+        {% endif %}
         {% endfor %}
         <div class="container">
             <div class="row">
