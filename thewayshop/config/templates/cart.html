@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{% static "css/responsive.css" %}">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static "css/custom.css" %}">
+    <link rel="stylesheet" href="{% static "css/error.css" %}">
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -54,9 +55,24 @@
             </div>
         </div>
     </div>
+    {% for message in messages %}
+    {% if message.tag == "error" %}
+    <div id="errorBox" class="error-box">
+        <span class="error-message">{{message}}</span>
+        <button class="close-btn" onclick="closeErrorBox()">×</button>
+    </div>
+    {% else %}
+    <div id="errorBox" class="error-box" style="background-color: rgb(74, 255, 74);border:none">
+        <span class="error-message">{{message}}</span>
+        <button class="close-btn" onclick="closeErrorBox()">×</button>
+    </div>
+    {% endif %}
+    {% endfor %}
     <!-- End All Title Box -->
 
     <!-- Start Cart  -->
+<form method="post">
+    {% csrf_token %}
     <div class="cart-box-main">
         <div class="container">
             <div class="row">
@@ -89,20 +105,20 @@
                                     <td class="price-pr">
                                         <p>$ {{i.product.calcute_price}}</p>
                                     </td>
-                                    <td class="quantity-box"><input type="number" size="4" value="{{i.count}}" min="0" step="1" class="c-input-text qty text"></td>
+                                    <td class="quantity-box"><input name="count" type="number" size="4" value="{{i.count}}" min="0" step="1" class="c-input-text qty text"><input name="slug" value="{{i.slug}}" type="hidden"></td>
                                     <td class="total-pr">
                                         {% with total=i.product.calcute_price|multiply:i.count %}
                                             <p>{{ total }}</p>
                                         {% endwith %}
                                     </td>
                                     <td class="remove-pr">
-                                        <a href="#">
+                                        <a href="{% url "shop:remove_cart" i.slug %}">
 									<i class="fas fa-times"></i>
 								</a>
                                     </td>
                                 </tr>
-                                {% endfor %}
                             </tbody>
+                            {% endfor %}
                         </table>
                     </div>
                 </div>
@@ -164,6 +180,7 @@
 
         </div>
     </div>
+</form>
     <!-- End Cart -->
 {% include "include/footer.html" %}
 
@@ -185,6 +202,7 @@
     <script src="{% static "js/form-validator.min.js" %}"></script>
     <script src="{% static "js/contact-form-script.js" %}"></script>
     <script src="{% static "js/custom.js" %}"></script>
+    <script src="{% static "js/error.js" %}"></script>
 </body>
 
 </html>

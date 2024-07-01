@@ -12,4 +12,5 @@ urlpatterns = [
     path("search-products",search,name="search"),
     path("add-cart",add_cart,name="add_cart"),
     path("cart",cart,name="cart"),
+    path("remove-cart-<slug>",remove_cart,name="remove_cart"),
 ]

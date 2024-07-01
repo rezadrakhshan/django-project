@@ -16,7 +16,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 300px;
   animation: slideIn 0.5s forwards;
 }
 

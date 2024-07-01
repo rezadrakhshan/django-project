@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, WishList, Category, Cart
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -159,21 +159,41 @@ def add_cart(request):
         size = request.POST.get("size")
         count = request.POST.get("count")
         product = request.POST.get("product")
-        if int(count) == 0 :
-            messages.error(request,"pleas add correct value")
+        item = Product.objects.get(id=product)
+        if Cart.objects.filter(product=item, user=request.user, size=size).exists():
+            cart = Cart.objects.get(product=item, user=request.user, size=size)
+            cart.count = cart.count + int(count)
+            cart.save()
+            messages.success(request, "Your order has been registered")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
-            item = Product.objects.get(id=product)
             new_order = Cart.objects.create(
                 user=request.user, product=item, size=size, count=count
             )
-            messages.success(request,"Your order has been registered")
+            messages.success(request, "Your order has been registered")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
+
+# FIXME:
 @login_required
 def cart(request):
-    item = Cart.objects.filter(user=request.user)
-    context = {
-        "items":item
-    }
-    return render(request,"cart.html",context)
+    items = Cart.objects.filter(user=request.user)
+    if request.method == "POST":
+        quantity = request.POST.get("count")
+        slug = request.POST.get("slug")
+        selected_cart = get_object_or_404(Cart, user=request.user, slug=slug)
+        selected_cart.count = quantity
+        selected_cart.save()
+        messages.success(request, "The changes were made successfully")
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+    context = {"items": items}
+    return render(request, "cart.html", context)
+
+
+@login_required
+def remove_cart(request, slug):
+    item = get_object_or_404(Cart, user=request.user, slug=slug)
+    item.delete()
+    messages.success(request, "The order was successfully deleted")
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
