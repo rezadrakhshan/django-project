@@ -71,9 +71,9 @@
     <!-- End All Title Box -->
 
     <!-- Start Cart  -->
-<form method="post">
-    {% csrf_token %}
     <div class="cart-box-main">
+        <form method="post">
+            {% csrf_token %}
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -103,7 +103,7 @@
 								</a>
                                     </td>
                                     <td class="price-pr">
-                                        <p>$ {{i.product.calcute_price}}</p>
+                                        <p>$ {{i.product.price}}</p>
                                     </td>
                                     <td class="quantity-box"><input name="count" type="number" size="4" value="{{i.count}}" min="0" step="1" class="c-input-text qty text"><input name="slug" value="{{i.slug}}" type="hidden"></td>
                                     <td class="total-pr">
@@ -123,21 +123,26 @@
                     </div>
                 </div>
             </div>
-
+            <div class="">
+                <div class="update-box">
+                    <input value="Update Cart" type="submit">
+                </div>
+            </div>
+        </form>
             <div class="row my-5">
                 <div class="col-lg-6 col-sm-6">
                     <div class="coupon-box">
                         <div class="input-group input-group-sm">
-                            <input class="form-control" placeholder="Enter your coupon code" aria-label="Coupon code" type="text">
-                            <div class="input-group-append">
-                                <button class="btn btn-theme" type="button">Apply Coupon</button>
-                            </div>
+                            <form method="post" action="{% url "shop:add_coupon" %}">
+                                {% csrf_token %}
+                                <div style="display: flex;justify-content: center;">
+                                    <input name="code" class="form-control" placeholder="Enter your coupon code" aria-label="Coupon code" type="text">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-theme" type="submit">Apply Coupon</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-sm-6">
-                    <div class="update-box">
-                        <input value="Update Cart" type="submit">
                     </div>
                 </div>
             </div>
@@ -148,21 +153,17 @@
                     <div class="order-box">
                         <h3>Order summary</h3>
                         <div class="d-flex">
-                            <h4>Sub Total</h4>
-                            <div class="ml-auto font-weight-bold"> $ 130 </div>
-                        </div>
-                        <div class="d-flex">
                             <h4>Discount</h4>
-                            <div class="ml-auto font-weight-bold"> $ 40 </div>
+                            <div class="ml-auto font-weight-bold"> $ {{Discount}} </div>
                         </div>
                         <hr class="my-1">
                         <div class="d-flex">
                             <h4>Coupon Discount</h4>
-                            <div class="ml-auto font-weight-bold"> $ 10 </div>
+                            <div class="ml-auto font-weight-bold"> $ {{tokenDiscount}} </div>
                         </div>
                         <div class="d-flex">
                             <h4>Tax</h4>
-                            <div class="ml-auto font-weight-bold"> $ 2 </div>
+                            <div class="ml-auto font-weight-bold"> $ {{Tax}} </div>
                         </div>
                         <div class="d-flex">
                             <h4>Shipping Cost</h4>
@@ -171,7 +172,7 @@
                         <hr>
                         <div class="d-flex gr-total">
                             <h5>Grand Total</h5>
-                            <div class="ml-auto h5"> $ 388 </div>
+                            <div class="ml-auto h5"> $ {{grandTotal}} </div>
                         </div>
                         <hr> </div>
                 </div>
@@ -180,7 +181,7 @@
 
         </div>
     </div>
-</form>
+
     <!-- End Cart -->
 {% include "include/footer.html" %}
 

@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, WishList, Category, Cart
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from .models import Product, WishList, Category, Cart, Coupon
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -178,6 +178,15 @@ def add_cart(request):
 @login_required
 def cart(request):
     items = Cart.objects.filter(user=request.user)
+    grandTotal = []
+    Discount = []
+    tokenDiscount = []
+    for i in items:
+        price = i.product.calcute_price()
+        grandTotal.append(price * i.count)
+        Discount.append(int(int(i.product.price) * i.product.offer / 100) * i.count)
+        for j in i.coupon.all():
+            tokenDiscount.append(int(i.product.price) * int(j.discount) / 100 * i.count)
     if request.method == "POST":
         quantity = request.POST.get("count")
         slug = request.POST.get("slug")
@@ -186,8 +195,15 @@ def cart(request):
         selected_cart.save()
         messages.success(request, "The changes were made successfully")
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
-    context = {"items": items}
+    Tax = (int(sum(grandTotal)) * 10) / 100
+    finalPrice = int(sum(grandTotal)) - Tax - int(sum(tokenDiscount))
+    context = {
+        "items": items,
+        "grandTotal": finalPrice,
+        "Tax": Tax,
+        "Discount": int(sum(Discount)),
+        "tokenDiscount": int(sum(tokenDiscount)),
+    }
     return render(request, "cart.html", context)
 
 
@@ -197,3 +213,25 @@ def remove_cart(request, slug):
     item.delete()
     messages.success(request, "The order was successfully deleted")
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+
+@login_required
+def use_token(request):
+    if request.method == "POST":
+        code = request.POST.get("code")
+        if Coupon.objects.filter(user=request.user, code=code).exists():
+            user_coupon = Coupon.objects.get(user=request.user, code=code)
+            if user_coupon.is_active == False:
+                user_order = get_list_or_404(Cart, user=request.user)
+                for i in user_order:
+                    i.coupon.add(user_coupon)
+                user_coupon.is_active = True
+                user_coupon.save()
+                messages.success(request, "The coupon was successfully added")
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+            else:
+                messages.error(request, "The coupon is active")
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+        else:
+            messages.error(request, "The coupon does not exist")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
