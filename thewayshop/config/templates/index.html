@@ -1,4 +1,6 @@
 {% load static %}
+{% load custom_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <!-- Basic -->
@@ -39,7 +41,7 @@
 <body>
 
     {% include "include/header.html" %}
-
+{% if request.resolver_match.url_name == "home" %}
     <!-- Start Slider -->
     <div id="slides-shop" class="cover-slides">
         <ul class="slides-container">
@@ -50,7 +52,7 @@
                         <div class="col-md-12">
                             <h1 class="m-b-20"><strong>Welcome To <br> Thewayshop</strong></h1>
                             <p class="m-b-40">See how your users experience your website in realtime or view <br> trends to see any changes in performance over time.</p>
-                            <p><a class="btn hvr-hover" href="#">Shop New</a></p>
+                            <p><a class="btn hvr-hover" href="">Shop New</a></p>
                         </div>
                     </div>
                 </div>
@@ -185,7 +187,155 @@
     </div>
     {% endif %}
     <!-- End Products  -->
+{% endif %}
+{% if request.resolver_match.url_name == "search" %}\
+<div class="shop-box-inner">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 sidebar-shop-left">
+                <div class="product-categori">
+                    <div class="search-product">
+                        <form action="{% url "shop:search" %}" method="get">
+                            {% csrf_token %}
+                            <input name="search" class="form-control" placeholder="Search here..." type="text">
+                            <input name="type" type="hidden" value="{{category}}">
+                            <button type="submit"> <i class="fa fa-search"></i> </button>
+                        </form>
+                    </div>
+                    <div class="filter-sidebar-left">
+                        <div class="title-left">
+                            <h3>Categories</h3>
+                        </div>
+                        <div class="list-group list-group-collapse list-group-sm list-group-tree" id="list-group-men" data-children=".sub-men">
+                        {% for category in categories %}
+                            {% if category.children.all %}
+                                <div class="list-group-collapse sub-men">
+                                    <a class="list-group-item list-group-item-action" href="#{{ category.id }}" data-toggle="collapse" aria-expanded="true" aria-controls="sub-men1">
+                                        {{ category.title }} <small class="text-muted">({{ category_product_count|get_item:category.id }})</small>
+                                    </a>
+                                    <div class="collapse show" id="{{ category.id }}" data-parent="#list-group-men">
+                                        <div class="list-group">
+                                            {% for child in category.children.all %}
+                                                <a href="{% url 'shop:category' child.slug %}" class="list-group-item list-group-item-action">
+                                                    {{ child.title }} <small class="text-muted">({{ category_product_count|get_item:child.id }})</small>
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <a href="{% url 'shop:category' category.slug %}" class="list-group-item list-group-item-action">
+                                    {{ category.title }} <small class="text-muted">({{ category_product_count|get_item:category.id }})</small>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                                          
 
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9 col-sm-12 col-xs-12 shop-content-right">
+                <div class="right-product-box">
+                    <div class="product-item-filter row">
+                        <div class="text-center text-sm-left">
+                            <p>Showing all {{items.count}} results</p>
+                        </div>
+                        <div class="col-12 col-sm-4 text-center text-sm-right">
+                            <ul class="nav nav-tabs ml-auto">
+                                <li>
+                                    <a class="nav-link active" href="#grid-view" data-toggle="tab"> <i class="fa fa-th"></i> </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="#list-view" data-toggle="tab"> <i class="fa fa-list-ul"></i> </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row product-categorie-box">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade show active" id="grid-view">
+                                <div class="row">
+                                    {% for i in items %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="products-single fix">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    {% if i.tag == "S" %}
+                                                    <p class="sale">SALE</p>
+                                                    {% else %}
+                                                    <p class="new">NEW</p>
+                                                    {% endif %}
+                                                </div>
+                                                <img src="{{i.picture.first.image.url}}" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url "shop:detail" i.id %}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
+                                                        <li><a href="{% url "shop:wish" i.id %}" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                                    </ul>
+                                                    <a class="cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{i.title}}</h4>
+                                                <h5> ${{i.calcute_price}}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% empty %}
+                                    <p style="padding:70px;">Item not found!!</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="list-view">
+                                {% for i in items %}
+                                <div class="list-view-box">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="products-single fix">
+                                                <div class="box-img-hover">
+                                                    <div class="type-lb">
+                                                        {% if i.tag == "N" %}
+                                                        <p class="new">NEW</p>
+                                                        {% else %}
+                                                        <p class="sale">SALE</p>
+                                                        {% endif %}
+                                                    </div>
+                                                    <img src="{{i.picture.first.image.url}}" class="img-fluid" alt="Image">
+                                                    <div class="mask-icon">
+                                                        <ul>
+                                                            <li><a href="{% url "shop:detail" i.id %}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
+                                                            <li><a href="{% url "shop:wish" i.id %}" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
+                                            <div class="why-text full-width">
+                                                <h4>{{i.title}}</h4>
+                                                <h5> <del>$ {{i.price}}</del> ${{i.calcute_price}}</h5>
+                                                <p>{{i.description}}</p>
+                                                <a class="btn hvr-hover" href="#">Add to Cart</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 
 {% include "include/footer.html" %}

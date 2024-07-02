@@ -123,9 +123,6 @@ def filter_price(request):
 def search(request):
     if request.method == "GET":
         word = request.GET.get("search")
-        category = request.GET.get("type")
-        cat = Category.objects.get(slug=category)
-        item = Product.objects.filter(title__icontains=word, avaible=True, category=cat)
         categories = Category.objects.filter(parent__isnull=True)
         category_product_count = {}
 
@@ -142,13 +139,27 @@ def search(request):
 
         for category in categories:
             populate_product_count(category)
-        context = {
-            "category": cat,
-            "items": item,
-            "categories": categories,
-            "category_product_count": category_product_count,
-        }
-        return render(request, "shop.html", context)
+        try:
+            category = request.GET.get("type")
+            cat = Category.objects.get(slug=category)
+            item = Product.objects.filter(
+                title__icontains=word, avaible=True, category=cat
+            )
+            context = {
+                "category": cat,
+                "items": item,
+                "categories": categories,
+                "category_product_count": category_product_count,
+            }
+            return render(request, "shop.html", context)
+        except:
+            item = Product.objects.filter(title__icontains=word, avaible=True)
+            context = {
+                "items": item,
+                "categories": categories,
+                "category_product_count": category_product_count,
+            }
+            return render(request, "index.html", context)
     else:
         return redirect("/")
 
