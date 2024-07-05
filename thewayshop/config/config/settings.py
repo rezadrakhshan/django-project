@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "member",
     "shop",
     "social_django",
+    "paypal.standard.ipn",
 ]
 
 MIDDLEWARE = [
@@ -167,3 +168,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("email")
 EMAIL_HOST_PASSWORD = os.getenv("password")
+
+
+# paypal backend
+PAYPAL_RECEIVER_EMAIL = "aghayebozorg1386@gmail.com"
+PAYPAL_TEST = True

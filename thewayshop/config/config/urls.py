@@ -25,6 +25,7 @@ urlpatterns = [
     path("", include("shop.urls")), 
     path("auth/", include("member.urls")), 
     path('social-auth/', include('social_django.urls', namespace='social')),
+    path("",include("paypal.standard.ipn.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

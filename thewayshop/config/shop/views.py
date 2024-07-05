@@ -3,6 +3,10 @@ from .models import Product, WishList, Category, Cart, Coupon
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings
+import uuid
+from django.urls import reverse
 
 # Create your views here.
 
@@ -179,7 +183,7 @@ def add_cart(request):
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
             new_order = Cart.objects.create(
-                user=request.user, product=item, size=size, count=count
+                user=request.user, product=item, size=size, count=count, status="U"
             )
             messages.success(request, "Your order has been registered")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
@@ -188,7 +192,7 @@ def add_cart(request):
 # FIXME:
 @login_required
 def cart(request):
-    items = Cart.objects.filter(user=request.user)
+    items = Cart.objects.filter(user=request.user, status="U")
     grandTotal = []
     Discount = []
     tokenDiscount = []
@@ -208,12 +212,25 @@ def cart(request):
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     Tax = (int(sum(grandTotal)) * 10) / 100
     finalPrice = int(sum(grandTotal)) - Tax - int(sum(tokenDiscount))
+    host = request.get_host()
+    paypal_checkout = {
+        "business": settings.PAYPAL_RECEIVER_EMAIL,
+        "amount": finalPrice,
+        "item_name": "thewayshop",
+        "invoice": uuid.uuid4(),
+        "currency_code": "USD",
+        "notify_url": f"http://{host}{reverse('paypal-ipn')}",
+        "return_url": f"http://{host}",
+        "cancel_url": f"http://{host}",
+    }
+    paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
     context = {
         "items": items,
         "grandTotal": finalPrice,
         "Tax": Tax,
         "Discount": int(sum(Discount)),
         "tokenDiscount": int(sum(tokenDiscount)),
+        "paypal": paypal_payment,
     }
     return render(request, "cart.html", context)
 

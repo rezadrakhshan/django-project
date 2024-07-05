@@ -123,12 +123,15 @@
                     </div>
                 </div>
             </div>
+            {% if items %}
             <div class="">
                 <div class="update-box">
                     <input value="Update Cart" type="submit">
                 </div>
             </div>
+            {% endif %}
         </form>
+        {% if items  %}
             <div class="row my-5">
                 <div class="col-lg-6 col-sm-6">
                     <div class="coupon-box">
@@ -146,6 +149,7 @@
                     </div>
                 </div>
             </div>
+        {% endif %}
 
             <div class="row my-5">
                 <div class="col-lg-8 col-sm-12"></div>
@@ -176,7 +180,11 @@
                         </div>
                         <hr> </div>
                 </div>
-                <div class="col-12 d-flex shopping-box"><a href="checkout.html" class="ml-auto btn hvr-hover">Checkout</a> </div>
+                {% if items %}
+                <div style="margin-left: 90%;">
+                    {{paypal.render}}
+                </div>
+                {% endif %}
             </div>
 
         </div>

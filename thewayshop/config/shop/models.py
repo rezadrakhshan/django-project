@@ -68,12 +68,18 @@ class Coupon(models.Model):
 
 
 class Cart(models.Model):
+    STATUS = (
+        ("P","Paid"),
+        ("U","Unpaid")
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=10)
     count = models.IntegerField()
     coupon = models.ManyToManyField(Coupon, related_name="coupon")
+    status = models.CharField(max_length=1,choices=STATUS)
     slug = models.UUIDField(primary_key=True, default=uuid.uuid4)
 
     def __str__(self) -> str:
         return f"{self.product.title} for {self.user.username}"
+    
